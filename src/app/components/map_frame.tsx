@@ -6,12 +6,22 @@ interface MapFrameOptions {
   circles: CircleOptions[];
 }
 
-function calcDistance(x1: number, y1: number, x2: number, y2: number): number {
-  return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+interface TouchData {
+  x: number;
+  y: number;
+  identifier: number;
+  new: boolean;
 }
 
 export default function MapFrame({ circles }: MapFrameOptions) {
   const [zoomRatio, setZoomRatio] = useState(1);
+  const [scaledPosition, setScaledPosition] = useState({
+    x: 0,
+    y: 0,
+    oldX: 0,
+    oldY: 0,
+  });
+  const [oldScaledPosition, setOldScaledPosition] = useState(scaledPosition);
   const [position, setPosition] = useState({
     x: 0,
     y: 0,
@@ -20,28 +30,50 @@ export default function MapFrame({ circles }: MapFrameOptions) {
     oldContainerX: 0,
     oldContainerY: 0,
   });
-  const [touches, setTouches] = useState({
-    p1: { x: 0, y: 0 },
-    p2: { x: 0, y: 0 },
-  });
+  const [oldPosition, setOldPosition] = useState(position);
+  const [touches, setTouches] = useState<TouchData[]>([]);
   const [transformOrigin, setTransformOrigin] = useState({
     x: 0,
     y: 0,
   });
   const [isDragging, setDragging] = useState(false);
-  const [isZooming, setZooming] = useState(false);
-  const [tl, setTl] = useState(0);
+  const [noDrag, setNoDrag] = useState(true);
 
   const wheelHandler = (e: React.WheelEvent) => {
-    setZoomRatio(() => zoomRatio - e.deltaY * 0.005);
-    setTransformOrigin({
-      x: e.clientX + position.x,
-      y: e.clientY + position.y,
-    });
-    console.log(zoomRatio);
+    const newTransformOrigin = {
+      x: e.clientX,
+      y: e.clientY,
+    };
+    const newZoomRatio = Math.min(
+      Math.max(0.1, zoomRatio - e.deltaY * 0.005),
+      10
+    );
+    const newPosition = {
+      ...position,
+      x:
+        (scaledPosition.x + newTransformOrigin.x * (zoomRatio - 1)) / zoomRatio,
+      y:
+        (scaledPosition.y + newTransformOrigin.y * (zoomRatio - 1)) / zoomRatio,
+    };
+    const newScaledPosition = {
+      ...scaledPosition,
+      x:
+        newZoomRatio * newPosition.x -
+        newTransformOrigin.x * (newZoomRatio - 1),
+      y:
+        newZoomRatio * newPosition.y -
+        newTransformOrigin.y * (newZoomRatio - 1),
+    };
+    setScaledPosition(newScaledPosition);
+    setPosition(newPosition);
+    setZoomRatio(newZoomRatio);
+    setTransformOrigin(newTransformOrigin);
   };
   const mouseDownHandler = (e: React.MouseEvent) => {
     setDragging(true);
+    setOldPosition(position);
+    setOldScaledPosition(scaledPosition);
+    setNoDrag(true);
     setPosition({
       ...position,
       dragInitX: e.clientX,
@@ -49,111 +81,214 @@ export default function MapFrame({ circles }: MapFrameOptions) {
       oldContainerX: position.x,
       oldContainerY: position.y,
     });
+    setScaledPosition({
+      ...position,
+      oldX: scaledPosition.x,
+      oldY: scaledPosition.y,
+    });
   };
   const mouseMoveHandler = (e: React.MouseEvent) => {
     if (!isDragging) return;
-
+    setNoDrag(false);
     setPosition({
       ...position,
-      x: position.oldContainerX + e.clientX - position.dragInitX,
-      y: position.oldContainerY + e.clientY - position.dragInitY,
+      x: position.oldContainerX + (e.clientX - position.dragInitX) / zoomRatio,
+      y: position.oldContainerY + (e.clientY - position.dragInitY) / zoomRatio,
+    });
+    setScaledPosition({
+      ...scaledPosition,
+      x: scaledPosition.oldX + e.clientX - position.dragInitX,
+      y: scaledPosition.oldY + e.clientY - position.dragInitY,
     });
   };
   const mouseUpHandler = (e: React.MouseEvent) => {
     setDragging(false);
+    if (noDrag) {
+      setPosition(oldPosition);
+      setScaledPosition(oldScaledPosition);
+    }
   };
   const touchDownHandler = (e: React.TouchEvent) => {
-    if (e.touches.length == 1) {
-      setZooming(false);
-      setDragging(true);
-      setPosition({
-        ...position,
-        dragInitX: e.touches[0].clientX,
-        dragInitY: e.touches[0].clientY,
-        oldContainerX: position.x,
-        oldContainerY: position.y,
-      });
-    } else if (e.touches.length == 2) {
-      setZooming(true);
-      setDragging(false);
-      setTouches({
-        p1: {
-          x: e.touches[0].clientX,
-          y: e.touches[0].clientY,
-        },
-        p2: {
-          x: e.touches[1].clientX,
-          y: e.touches[1].clientY,
-        },
-      });
-      e.preventDefault();
+    for (let i = 0; i < e.changedTouches.length; i++) {
+      const touch = e.changedTouches[i];
+
+      setTouches((touches) =>
+        touches.concat({
+          x: touch.clientX,
+          y: touch.clientY,
+          identifier: touch.identifier,
+          new: true,
+        })
+      );
     }
+    console.log(e);
   };
   const touchMoveHandler = (e: React.TouchEvent) => {
-    setTl(e.touches.length);
-    if (isDragging) {
+    const oldTouches = touches;
+    const currentTouches = touches.slice();
+    for (let i = 0; i < e.touches.length; i++) {
+      currentTouches[i] = {
+        ...currentTouches[i],
+        new: false,
+      };
+    }
+    for (let i = 0; i < e.targetTouches.length; i++) {
+      const touch = e.targetTouches[i];
+      const idx = touches.findIndex(
+        (value) => value.identifier === touch.identifier
+      );
+      currentTouches[idx] = {
+        ...currentTouches[idx],
+        x: touch.clientX,
+        y: touch.clientY,
+      };
+    }
+    const touchDeltas = currentTouches
+      .map((current) => {
+        const old = oldTouches.find(
+          (data) => data.identifier === current.identifier
+        );
+        if (old === undefined) return undefined;
+
+        return {
+          dx: current.x - old.x,
+          dy: current.y - old.y,
+          identifier: current.identifier,
+        };
+      })
+      .filter((value) => value !== undefined) as { dx: number; dy: number }[];
+    if (touchDeltas.length == 1) {
       setPosition({
         ...position,
-        x: position.oldContainerX + e.touches[0].clientX - position.dragInitX,
-        y: position.oldContainerY + e.touches[0].clientY - position.dragInitY,
+        x: position.x + touchDeltas[0].dx / zoomRatio,
+        y: position.y + touchDeltas[0].dy / zoomRatio,
       });
-    } else if (isZooming) {
-      setTransformOrigin({
-        x: (e.touches[0].clientX + e.touches[1].clientX) / 2 + position.x,
-        y: (e.touches[0].clientY + e.touches[1].clientY) / 2 + position.y,
+      setScaledPosition({
+        ...scaledPosition,
+        x: scaledPosition.x + touchDeltas[0].dx,
+        y: scaledPosition.y + touchDeltas[0].dy,
       });
-      const before = calcDistance(
-        touches.p1.x,
-        touches.p1.y,
-        touches.p2.x,
-        touches.p2.y
+    } else if (touchDeltas.length == 2) {
+      const zoomIdentifiers = oldTouches.map((t) => t.identifier);
+      const oldZoomTouches = oldTouches.filter((touch) =>
+        zoomIdentifiers.includes(touch.identifier)
       );
-      const after = calcDistance(
-        e.touches[0].clientX,
-        e.touches[0].clientY,
-        e.touches[1].clientX,
-        e.touches[1].clientY
+      const u1 = touchDeltas[0].dx,
+        v1 = touchDeltas[0].dy;
+      const u2 = touchDeltas[1].dx,
+        v2 = touchDeltas[1].dy;
+      const x1 = oldZoomTouches[0].x,
+        y1 = oldZoomTouches[0].y;
+      const x2 = oldZoomTouches[1].x,
+        y2 = oldZoomTouches[1].y;
+      const d1 = Math.hypot(x2 - x1, y2 - y1),
+        d2 = Math.hypot(x2 + u2 - x1 - u1, y2 + v2 - y1 - v1);
+      const cosine =
+        (u1 * v1 + u2 * v2) / (Math.hypot(u1, v1) * Math.hypot(u2, v2));
+
+      const newTransformOrigin = {
+        x: (x2 + x1) / 2,
+        y: (y2 + y1) / 2,
+      };
+
+      console.log(
+        u1,
+        v1,
+        u2,
+        v2,
+        x1,
+        y1,
+        x2,
+        y2,
+        d1,
+        d2,
+        cosine,
+        newTransformOrigin
       );
-
-      setZoomRatio((ratio) => ratio + (after - before) * 0.005);
-
-      setTouches({
-        p1: { x: e.touches[0].clientX, y: e.touches[0].clientY },
-        p2: { x: e.touches[1].clientX, y: e.touches[1].clientY },
-      });
+      const newZoomRatio = Math.min(
+        Math.max(0.3, zoomRatio + (d2 - d1) * 0.005),
+        5
+      );
+      const newPosition = {
+        ...position,
+        x:
+          (scaledPosition.x + newTransformOrigin.x * (zoomRatio - 1)) /
+          zoomRatio,
+        y:
+          (scaledPosition.y + newTransformOrigin.y * (zoomRatio - 1)) /
+          zoomRatio,
+      };
+      const newScaledPosition = {
+        ...scaledPosition,
+        x:
+          newZoomRatio * newPosition.x -
+          newTransformOrigin.x * (newZoomRatio - 1),
+        y:
+          newZoomRatio * newPosition.y -
+          newTransformOrigin.y * (newZoomRatio - 1),
+      };
+      const newMovedPosition = {
+        ...newPosition,
+        x: newPosition.x + (u1 + u2) / 2 / zoomRatio,
+        y: newPosition.y + (v1 + v2) / 2 / zoomRatio,
+      };
+      const newMovedScaledPosition = {
+        ...newScaledPosition,
+        x: newScaledPosition.x + (u1 + u2) / 2,
+        y: newScaledPosition.y + (v1 + v2) / 2,
+      };
+      setScaledPosition(newMovedScaledPosition);
+      setPosition(newMovedPosition);
+      setZoomRatio(newZoomRatio);
+      setTransformOrigin(newTransformOrigin);
     }
+    setTouches(currentTouches);
     e.preventDefault();
   };
-  const touchUpHandler = (e: React.TouchEvent) => {
-    setDragging(false);
-    setZooming(false);
+  const touchEndHandler = (e: React.TouchEvent) => {
+    for (let i = 0; i < e.changedTouches.length; i++) {
+      const touch = e.changedTouches[i];
+
+      setTouches((touches) => {
+        const idx = touches.findIndex(
+          (value) => value.identifier === touch.identifier
+        );
+        const copy = touches.slice();
+        copy.splice(idx, 1);
+        return copy;
+      });
+    }
+    console.log(e);
   };
+  const touchDebugText = touches
+    .map((value) => {
+      return `Touch#${value.identifier} ${value.new ? "NEW" : "EXT"} (${
+        value.x
+      }, ${value.y})`;
+    })
+    .join(" | ");
 
   return (
-    <>
-      <div
-        style={{
-          width: "100%",
-          height: "90%",
-          overflow: "hidden",
-          border: "1px black solid",
-        }}
-        onWheel={wheelHandler}
-        onMouseDown={mouseDownHandler}
-        onMouseMove={mouseMoveHandler}
-        onMouseUp={mouseUpHandler}
-        onTouchStart={touchDownHandler}
-        onTouchMove={touchMoveHandler}
-        onTouchEnd={touchUpHandler}
-      >
-        <MapContainer
-          position={position}
-          ratio={zoomRatio}
-          circles={circles}
-          transformOrigin={transformOrigin}
-        />
-      </div>
-      {touches.p1.x} {touches.p1.y} {touches.p2.x} {touches.p2.y} {tl}
-    </>
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        overflow: "hidden",
+      }}
+      onWheel={wheelHandler}
+      onMouseDown={mouseDownHandler}
+      onMouseMove={mouseMoveHandler}
+      onMouseUp={mouseUpHandler}
+      onTouchStart={touchDownHandler}
+      onTouchMove={touchMoveHandler}
+      onTouchEnd={touchEndHandler}
+    >
+      <MapContainer
+        position={position}
+        ratio={zoomRatio}
+        circles={circles}
+        transformOrigin={transformOrigin}
+      />
+    </div>
   );
 }

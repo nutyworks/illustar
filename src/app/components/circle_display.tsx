@@ -18,8 +18,8 @@ export default function CirleDisplay(opts: CircleOptions) {
         position: "absolute",
         top: opts.yPos,
         left: opts.xPos,
-        backgroundColor: "rgb(var(--default-circle-color))",
-        borderRadius: 2,
+        backgroundColor: "transparent",
+        // border: "2px solid yellow",
         width: opts.width,
         height: opts.height,
       }}

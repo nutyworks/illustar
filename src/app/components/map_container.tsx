@@ -48,18 +48,29 @@ export default function MapContainer({
   );
 
   return (
-    <>
+    <div
+      style={{
+        transform:
+          `translate(${position.x}px, ${position.y}px)` + `scale(${zoomRatio})`,
+        transformOrigin: `${transformOrigin.x - position.x}px ${
+          transformOrigin.y - position.y
+        }px`,
+      }}
+    >
       <div
         style={{
-          height: "100%",
-          margin: 0,
-          transform: `translate(${position.x}px, ${position.y}px) scale(${zoomRatio})`,
-          transformOrigin: `${transformOrigin.x}px ${transformOrigin.y}px`,
+          backgroundImage: `url(/placement.png)`,
+          backgroundSize: "3307px 1417px",
+          position: "absolute",
+          transform: `translate(-520px, -222px)`,
+          width: 3307,
+          height: 1417,
+          WebkitUserSelect: "none",
+          userSelect: "none",
         }}
-      >
-        {tooltipElem}
-        {elements}
-      </div>
-    </>
+      ></div>
+      {tooltipElem}
+      {elements}
+    </div>
   );
 }
