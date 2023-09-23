@@ -12,7 +12,16 @@ export default function Tooltip({ msg, position }: TooltipOptions) {
         top: position.y,
       }}
     >
-      {msg}
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -100%)",
+        }}
+      >
+        {msg} AAAAAAAA BBBBBBBB
+      </div>
     </div>
   );
 }

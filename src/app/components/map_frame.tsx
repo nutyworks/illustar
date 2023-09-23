@@ -260,13 +260,6 @@ export default function MapFrame({ circles }: MapFrameOptions) {
     }
     console.log(e);
   };
-  const touchDebugText = touches
-    .map((value) => {
-      return `Touch#${value.identifier} ${value.new ? "NEW" : "EXT"} (${
-        value.x
-      }, ${value.y})`;
-    })
-    .join(" | ");
 
   return (
     <div
@@ -285,6 +278,7 @@ export default function MapFrame({ circles }: MapFrameOptions) {
     >
       <MapContainer
         position={position}
+        scaledPosition={scaledPosition}
         ratio={zoomRatio}
         circles={circles}
         transformOrigin={transformOrigin}

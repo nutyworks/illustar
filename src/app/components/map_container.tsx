@@ -8,12 +8,14 @@ interface MapOptions {
   circles: CircleOptions[];
   ratio: number;
   position: { x: number; y: number };
+  scaledPosition: { x: number; y: number };
   transformOrigin: { x: number; y: number };
 }
 
 export default function MapContainer({
   circles,
   position,
+  scaledPosition,
   ratio: zoomRatio,
   transformOrigin,
 }: MapOptions) {
@@ -40,37 +42,45 @@ export default function MapContainer({
     );
   });
 
-  const tooltipX = circles.find((d) => d.id === hoverLoc)?.xPos ?? 0;
-  const tooltipY = circles.find((d) => d.id === hoverLoc)?.yPos ?? 0;
+  const loc = circles.find((d) => d.id === hoverLoc);
 
-  const tooltipElem = hoverLoc != null && (
-    <Tooltip msg={hoverLoc} position={{ x: tooltipX, y: tooltipY }} />
+  const tooltipElem = loc != null && (
+    <Tooltip
+      msg={loc.id}
+      position={{
+        x: (loc?.xPos + loc?.width / 2) * zoomRatio + scaledPosition.x,
+        y: loc?.yPos * zoomRatio + scaledPosition.y,
+      }}
+    />
   );
 
   return (
-    <div
-      style={{
-        transform:
-          `translate(${position.x}px, ${position.y}px)` + `scale(${zoomRatio})`,
-        transformOrigin: `${transformOrigin.x - position.x}px ${
-          transformOrigin.y - position.y
-        }px`,
-      }}
-    >
+    <>
       <div
         style={{
-          backgroundImage: `url(/placement.png)`,
-          backgroundSize: "3307px 1417px",
-          position: "absolute",
-          transform: `translate(-520px, -222px)`,
-          width: 3307,
-          height: 1417,
-          WebkitUserSelect: "none",
-          userSelect: "none",
+          transform:
+            `translate(${position.x}px, ${position.y}px)` +
+            `scale(${zoomRatio})`,
+          transformOrigin: `${transformOrigin.x - position.x}px ${
+            transformOrigin.y - position.y
+          }px`,
         }}
-      ></div>
+      >
+        <svg
+          style={{
+            backgroundImage: `url(/placement.png)`,
+            backgroundSize: "3307px 1417px",
+            position: "absolute",
+            transform: `translate(-520px, -222px)`,
+            width: 3307,
+            height: 1417,
+            WebkitUserSelect: "none",
+            userSelect: "none",
+          }}
+        ></svg>
+        {elements}
+      </div>
       {tooltipElem}
-      {elements}
-    </div>
+    </>
   );
 }
