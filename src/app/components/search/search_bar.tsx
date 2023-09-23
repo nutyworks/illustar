@@ -1,6 +1,4 @@
 import { Dispatch, SetStateAction } from "react";
-import { CircleOptions } from "../map/circle_display";
-import { Input } from "postcss";
 
 interface SearchBarOptions {
   setSearchText: Dispatch<SetStateAction<string>>;
