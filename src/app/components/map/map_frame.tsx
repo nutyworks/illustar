@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import MapContainer from "./map_container";
 import { CircleOptions } from "./circle_display";
+import { debug } from "console";
 
 interface MapFrameOptions {
   circles: CircleOptions[];
@@ -286,6 +287,7 @@ export default function MapFrame({
       onTouchStart={touchDownHandler}
       onTouchMove={touchMoveHandler}
       onTouchEnd={touchEndHandler}
+      onTouchCancel={touchEndHandler}
     >
       <MapContainer
         position={position}

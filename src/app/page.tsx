@@ -5,6 +5,9 @@ import MapFrame from "./components/map/map_frame";
 import { circleData } from "./data";
 import DaySelectButton from "./components/day_select_button";
 import dynamic from "next/dynamic";
+import SearchBar from "./components/search/search_bar";
+import { CircleOptions } from "./components/map/circle_display";
+import SearchResultContainer from "./components/search/search_result_container";
 const InfoSilderFrame = dynamic(
   () => import("./components/info_silder/info_silder_frame"),
   {
@@ -15,7 +18,68 @@ const InfoSilderFrame = dynamic(
 export default function App() {
   const [day, setDay] = useState(0);
   const [selectedLoc, setSelectedLoc] = useState<string | null>(null);
+  const [searchText, setSearchText] = useState<string>("");
+  const [isSearching, setSearching] = useState<boolean>(false);
+  const [searchResult, setSearchResult] = useState<CircleOptions[]>([]);
+
   const dayCircleData = circleData[day];
+  const performSearch = (query: string) => {
+    if (query === "") setSearchResult([]);
+    const res = dayCircleData.filter((circle) => circle.name.includes(query));
+    setSearchResult(res);
+  };
+  const submitHandler = (e: React.FormEvent) => {
+    const target = e.target as HTMLInputElement;
+    performSearch(target.value);
+  };
+  const focusHandler = (e: React.FocusEvent) => {
+    setSearching(true);
+  };
+
+  const searchPage = (
+    <>
+      <div
+        style={{
+          display: "block",
+          position: "fixed",
+          width: "100%",
+          height: "100%",
+          backgroundColor: "white",
+          overflow: "auto",
+          pointerEvents: "all",
+          paddingTop: "4.75em",
+        }}
+      >
+        <SearchResultContainer result={searchResult} />
+      </div>
+      <div
+        style={{
+          display: "block",
+          position: "fixed",
+          width: "100%",
+          height: "4.75em",
+          backgroundColor: "white",
+          borderBottom: "1px solid rgb(var(--border-color))",
+          boxShadow: "1px 1px 15px 1px gray",
+        }}
+      ></div>
+    </>
+  );
+  const infoSilder = (
+    <div
+      style={{
+        position: "absolute",
+        display: "block",
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+      }}
+    >
+      <InfoSilderFrame
+        circle={dayCircleData.find((circle) => circle.id === selectedLoc)}
+      />
+    </div>
+  );
 
   return (
     <div
@@ -43,24 +107,29 @@ export default function App() {
           display: "block",
           position: "fixed",
           right: "1em",
-          top: "1em",
+          top: "4.75em",
         }}
       >
         <DaySelectButton day={day} setDay={setDay} />
       </div>
+      {isSearching && searchPage}
       <div
         style={{
-          position: "absolute",
           display: "block",
+          position: "fixed",
           width: "100%",
-          height: "100%",
-          pointerEvents: "none",
+          padding: "1em",
         }}
       >
-        <InfoSilderFrame
-          circle={dayCircleData.find((circle) => circle.id === selectedLoc)}
+        <SearchBar
+          setSearchText={setSearchText}
+          performSearch={performSearch}
+          focusHandler={focusHandler}
+          submitHandler={submitHandler}
+          setSearching={setSearching}
         />
       </div>
+      {!isSearching && infoSilder}
     </div>
   );
 }
