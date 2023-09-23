@@ -3,7 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --default-circle-color: 50, 50, 50;
+  --circle-color: 50, 50, 50;
+  --circle-hovering-color: 255, 255, 255, 50%;
+  --tooltip-background-color: 50, 50, 50;
+  --tooltip-color: 255, 255, 255;
   --foreground-rgb: 0, 0, 0;
   --background-rgb: 255, 255, 255;
 }

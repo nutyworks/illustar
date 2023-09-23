@@ -7,19 +7,34 @@ export interface CircleOptions {
   height: number;
   id: string;
   name: string;
+  repr: string;
   urls: string[];
   days: number[];
 }
 
-export default function CirleDisplay(opts: CircleOptions) {
+interface CircleDisplayOptions {
+  xPos: number;
+  yPos: number;
+  width: number;
+  height: number;
+  id: string;
+  name: string;
+  repr: string;
+  urls: string[];
+  days: number[];
+  hovering: boolean;
+  selected: boolean;
+}
+
+export default function CirleDisplay(opts: CircleDisplayOptions) {
   return (
     <button
       style={{
         position: "absolute",
         top: opts.yPos,
         left: opts.xPos,
-        backgroundColor: "transparent",
-        // border: "2px solid yellow",
+        backgroundColor:
+          (opts.hovering && "rgba(var(--circle-hovering-color))") || "",
         width: opts.width,
         height: opts.height,
       }}

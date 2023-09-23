@@ -3,7 +3,7 @@ import MapContainer from "./map_container";
 import { CircleOptions } from "./circle_display";
 
 interface MapFrameOptions {
-  circles: CircleOptions[];
+  circles: CircleOptions[][];
 }
 
 interface TouchData {
@@ -280,7 +280,7 @@ export default function MapFrame({ circles }: MapFrameOptions) {
         position={position}
         scaledPosition={scaledPosition}
         ratio={zoomRatio}
-        circles={circles}
+        circles={circles[0]}
         transformOrigin={transformOrigin}
       />
     </div>

@@ -20,6 +20,7 @@ export default function MapContainer({
   transformOrigin,
 }: MapOptions) {
   const [hoverLoc, setHoverLoc] = useState<string | null>(null);
+  const loc = circles.find((d) => d.id === hoverLoc);
 
   const elements = circles.map((data) => {
     return (
@@ -35,22 +36,22 @@ export default function MapContainer({
           height={data.height}
           id={data.id}
           name={data.name}
+          repr={data.repr}
           urls={data.urls}
           days={data.days}
+          hovering={loc?.id === data.id}
+          selected={false}
         />
       </div>
     );
   });
 
-  const loc = circles.find((d) => d.id === hoverLoc);
-
   const tooltipElem = loc != null && (
     <Tooltip
       msg={loc.id}
-      position={{
-        x: (loc?.xPos + loc?.width / 2) * zoomRatio + scaledPosition.x,
-        y: loc?.yPos * zoomRatio + scaledPosition.y,
-      }}
+      location={loc}
+      scaledPosition={scaledPosition}
+      zoomRatio={zoomRatio}
     />
   );
 
