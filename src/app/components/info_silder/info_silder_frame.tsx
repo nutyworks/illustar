@@ -46,6 +46,8 @@ export default function InfoSilderFrame({ circle }: InfoSilderFrameOptions) {
     }
   };
 
+  console.log(height, silderPercentage);
+
   return (
     <div
       style={{

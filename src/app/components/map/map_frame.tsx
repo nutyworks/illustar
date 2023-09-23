@@ -1,12 +1,22 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import MapContainer from "./map_container";
 import { CircleOptions } from "./circle_display";
-import { debug } from "console";
+import useWindowDimensions from "@/app/utils/get_window_dimensions";
+
+export class ForceLocationEvent {
+  value: string;
+  used: boolean;
+  constructor(value: string) {
+    this.value = value;
+    this.used = false;
+  }
+}
 
 interface MapFrameOptions {
   circles: CircleOptions[];
   selectedLoc: string | null;
   setSelectedLoc: Dispatch<SetStateAction<string | null>>;
+  forceLocationEvent: ForceLocationEvent;
 }
 
 interface TouchData {
@@ -20,7 +30,9 @@ export default function MapFrame({
   circles,
   selectedLoc,
   setSelectedLoc,
+  forceLocationEvent,
 }: MapFrameOptions) {
+  const { width, height } = useWindowDimensions();
   const [zoomRatio, setZoomRatio] = useState(1);
   const [scaledPosition, setScaledPosition] = useState({
     x: 0,
@@ -45,6 +57,21 @@ export default function MapFrame({
   });
   const [isDragging, setDragging] = useState(false);
   const [noDrag, setNoDrag] = useState(true);
+
+  if (!forceLocationEvent.used) {
+    forceLocationEvent.used = true;
+
+    const floc = circles.find((circle) => circle.id === selectedLoc);
+
+    if (floc !== undefined) {
+      const x = -(floc.xPos + floc.width / 2 - width / 2);
+      const y = -(floc.yPos + floc.height / 2 - height / 2);
+
+      setZoomRatio(1);
+      setPosition({ ...position, x, y });
+      setScaledPosition({ ...scaledPosition, x, y });
+    }
+  }
 
   const wheelHandler = (e: React.WheelEvent) => {
     const newTransformOrigin = {
@@ -197,20 +224,6 @@ export default function MapFrame({
         y: (y2 + y1) / 2,
       };
 
-      console.log(
-        u1,
-        v1,
-        u2,
-        v2,
-        x1,
-        y1,
-        x2,
-        y2,
-        d1,
-        d2,
-        cosine,
-        newTransformOrigin
-      );
       const newZoomRatio = Math.min(
         Math.max(0.3, zoomRatio + (d2 - d1) * 0.005),
         5

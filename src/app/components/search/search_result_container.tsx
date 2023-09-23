@@ -1,13 +1,30 @@
+import { Dispatch, SetStateAction } from "react";
 import { CircleOptions } from "../map/circle_display";
+import { ForceLocationEvent } from "../map/map_frame";
 
 interface SearchResultOptions {
   result: CircleOptions[];
+  setSelectedLoc: Dispatch<SetStateAction<string | null>>;
+  setSearching: Dispatch<SetStateAction<boolean>>;
+  fireForceLocationEvent: Dispatch<SetStateAction<ForceLocationEvent>>;
 }
 
-export default function SearchResultContainer({ result }: SearchResultOptions) {
+export default function SearchResultContainer({
+  result,
+  setSelectedLoc,
+  setSearching,
+  fireForceLocationEvent,
+}: SearchResultOptions) {
   const results = result.map((circle) => {
     return (
-      <div key={circle.id + circle.name}>
+      <div
+        key={circle.id + circle.name}
+        onClick={() => {
+          setSelectedLoc(circle.id);
+          setSearching(false);
+          fireForceLocationEvent(new ForceLocationEvent(circle.id));
+        }}
+      >
         <SearchResultCircle {...circle} />
       </div>
     );

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import MapFrame from "./components/map/map_frame";
+import { ForceLocationEvent } from "./components/map/map_frame";
 import { circleData } from "./data";
 import DaySelectButton from "./components/day_select_button";
 import dynamic from "next/dynamic";
@@ -14,6 +14,9 @@ const InfoSilderFrame = dynamic(
     ssr: false,
   }
 );
+const MapFrame = dynamic(() => import("./components/map/map_frame"), {
+  ssr: false,
+});
 
 export default function App() {
   const [day, setDay] = useState(0);
@@ -21,6 +24,9 @@ export default function App() {
   const [searchText, setSearchText] = useState<string>("");
   const [isSearching, setSearching] = useState<boolean>(false);
   const [searchResult, setSearchResult] = useState<CircleOptions[]>([]);
+  const [forceLocationEvent, fireForceLocationEvent] = useState(
+    new ForceLocationEvent("")
+  );
 
   const dayCircleData = circleData[day];
   const performSearch = (query: string) => {
@@ -38,7 +44,6 @@ export default function App() {
   const focusHandler = (e: React.FocusEvent) => {
     setSearching(true);
   };
-
   const searchPage = (
     <>
       <div
@@ -53,7 +58,12 @@ export default function App() {
           paddingTop: "4.75em",
         }}
       >
-        <SearchResultContainer result={searchResult} />
+        <SearchResultContainer
+          result={searchResult}
+          setSelectedLoc={setSelectedLoc}
+          setSearching={setSearching}
+          fireForceLocationEvent={fireForceLocationEvent}
+        />
       </div>
       <div
         style={{
@@ -103,6 +113,7 @@ export default function App() {
           circles={dayCircleData}
           selectedLoc={selectedLoc}
           setSelectedLoc={setSelectedLoc}
+          forceLocationEvent={forceLocationEvent}
         />
       </div>
       <div
@@ -132,7 +143,7 @@ export default function App() {
           setSearching={setSearching}
         />
       </div>
-      {!isSearching && infoSilder}
+      {isSearching || infoSilder}
     </div>
   );
 }
