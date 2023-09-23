@@ -127,12 +127,11 @@ export default function MapFrame({
         })
       );
     }
-    console.log(e);
   };
   const touchMoveHandler = (e: React.TouchEvent) => {
     const oldTouches = touches;
     const currentTouches = touches.slice();
-    for (let i = 0; i < e.touches.length; i++) {
+    for (let i = 0; i < currentTouches.length; i++) {
       currentTouches[i] = {
         ...currentTouches[i],
         new: false,
@@ -249,9 +248,9 @@ export default function MapFrame({
       setTransformOrigin(newTransformOrigin);
     }
     setTouches(currentTouches);
-    e.preventDefault();
   };
   const touchEndHandler = (e: React.TouchEvent) => {
+    touchMoveHandler(e);
     for (let i = 0; i < e.changedTouches.length; i++) {
       const touch = e.changedTouches[i];
 
@@ -264,8 +263,14 @@ export default function MapFrame({
         return copy;
       });
     }
-    console.log(e);
   };
+
+  const debugStr = touches
+    .map(
+      (touch) =>
+        `Touch#${touch.identifier} ${touch.new} (${touch.x}, ${touch.y})`
+    )
+    .join(" | ");
 
   return (
     <div

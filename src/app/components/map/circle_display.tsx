@@ -39,7 +39,7 @@ export default function CirleDisplay(opts: CircleDisplayOptions) {
         backgroundColor:
           (opts.selected && "rgba(var(--circle-selected-color))") ||
           (opts.hovering && "rgba(var(--circle-hovering-color))") ||
-          "",
+          "transparent",
         width: opts.width,
         height: opts.height,
       }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CircleOptions } from "../map/circle_display";
 import InfoSilderContainer from "./info_slider_container";
 import useWindowDimensions from "@/app/utils/get_window_dimensions";
