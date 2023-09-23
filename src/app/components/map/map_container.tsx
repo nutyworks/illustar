@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import CirleDisplay, { CircleOptions } from "./circle_display";
 import Tooltip from "./tooltip";
 
@@ -10,6 +10,8 @@ interface MapOptions {
   position: { x: number; y: number };
   scaledPosition: { x: number; y: number };
   transformOrigin: { x: number; y: number };
+  selectedLoc: string | null;
+  setSelectedLoc: Dispatch<SetStateAction<string | null>>;
 }
 
 export default function MapContainer({
@@ -18,6 +20,8 @@ export default function MapContainer({
   scaledPosition,
   ratio: zoomRatio,
   transformOrigin,
+  selectedLoc,
+  setSelectedLoc,
 }: MapOptions) {
   const [hoverLoc, setHoverLoc] = useState<string | null>(null);
   const loc = circles.find((d) => d.id === hoverLoc);
@@ -40,7 +44,8 @@ export default function MapContainer({
           urls={data.urls}
           days={data.days}
           hovering={loc?.id === data.id}
-          selected={false}
+          selected={selectedLoc === data.id}
+          setSelectedLoc={setSelectedLoc}
         />
       </div>
     );
@@ -48,7 +53,6 @@ export default function MapContainer({
 
   const tooltipElem = loc != null && (
     <Tooltip
-      msg={loc.id}
       location={loc}
       scaledPosition={scaledPosition}
       zoomRatio={zoomRatio}

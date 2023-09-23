@@ -5,10 +5,29 @@
 :root {
   --circle-color: 50, 50, 50;
   --circle-hovering-color: 255, 255, 255, 50%;
+  --circle-selected-color: 183, 79, 247;
   --tooltip-background-color: 50, 50, 50;
   --tooltip-color: 255, 255, 255;
   --foreground-rgb: 0, 0, 0;
   --background-rgb: 255, 255, 255;
+  --selected-background-rgb: 234, 234, 234;
+  --border-color: 127, 127, 127;
+  --silder-handle-color: 127, 127, 127;
+  --shadow-color: 127, 127, 127, 25%;
+  --saturday-color: 80, 150, 242;
+  --sunday-color: 245, 73, 119;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*:focus {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -31,4 +50,9 @@ body {
   width: 100%;
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-rgb));
+}
+
+h1 {
+  font-size: 2em;
+  font-weight: 700;
 }

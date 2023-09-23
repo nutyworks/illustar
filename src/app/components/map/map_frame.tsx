@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import MapContainer from "./map_container";
 import { CircleOptions } from "./circle_display";
 
 interface MapFrameOptions {
-  circles: CircleOptions[][];
+  circles: CircleOptions[];
+  selectedLoc: string | null;
+  setSelectedLoc: Dispatch<SetStateAction<string | null>>;
 }
 
 interface TouchData {
@@ -13,7 +15,11 @@ interface TouchData {
   new: boolean;
 }
 
-export default function MapFrame({ circles }: MapFrameOptions) {
+export default function MapFrame({
+  circles,
+  selectedLoc,
+  setSelectedLoc,
+}: MapFrameOptions) {
   const [zoomRatio, setZoomRatio] = useState(1);
   const [scaledPosition, setScaledPosition] = useState({
     x: 0,
@@ -280,8 +286,10 @@ export default function MapFrame({ circles }: MapFrameOptions) {
         position={position}
         scaledPosition={scaledPosition}
         ratio={zoomRatio}
-        circles={circles[0]}
+        circles={circles}
         transformOrigin={transformOrigin}
+        selectedLoc={selectedLoc}
+        setSelectedLoc={setSelectedLoc}
       />
     </div>
   );

@@ -1,5 +1,7 @@
 "use client";
 
+import { Dispatch, SetStateAction } from "react";
+
 export interface CircleOptions {
   xPos: number;
   yPos: number;
@@ -24,6 +26,7 @@ interface CircleDisplayOptions {
   days: number[];
   hovering: boolean;
   selected: boolean;
+  setSelectedLoc: Dispatch<SetStateAction<string | null>>;
 }
 
 export default function CirleDisplay(opts: CircleDisplayOptions) {
@@ -34,11 +37,13 @@ export default function CirleDisplay(opts: CircleDisplayOptions) {
         top: opts.yPos,
         left: opts.xPos,
         backgroundColor:
-          (opts.hovering && "rgba(var(--circle-hovering-color))") || "",
+          (opts.selected && "rgba(var(--circle-selected-color))") ||
+          (opts.hovering && "rgba(var(--circle-hovering-color))") ||
+          "",
         width: opts.width,
         height: opts.height,
       }}
-      onClick={() => alert("You clicked " + opts.id)}
+      onClick={() => opts.setSelectedLoc(opts.id)}
     ></button>
   );
 }
