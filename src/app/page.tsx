@@ -39,7 +39,7 @@ export default function App() {
 
     const queries = query.split(" ");
 
-    let res = dayCircleData;
+    let res = circleData;
     queries.forEach((q) => {
       if (q.startsWith("#") && q.length > 1)
         res = res.filter((c) => c.tags.includes(q));
@@ -74,6 +74,7 @@ export default function App() {
         <SearchResultContainer
           result={searchResult}
           setSelectedLoc={setSelectedLoc}
+          setDay={setDay}
           setSearching={setSearching}
           fireForceLocationEvent={fireForceLocationEvent}
         />
@@ -153,6 +154,7 @@ export default function App() {
           performSearch={performSearch}
           focusHandler={focusHandler}
           submitHandler={submitHandler}
+          searching={isSearching}
           setSearching={setSearching}
         />
       </div>
