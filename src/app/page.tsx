@@ -107,6 +107,12 @@ export default function App() {
       />
     </div>
   );
+  const startSearching = () => {
+    if (!isSearching) {
+      window.history.pushState({}, "#search", "#search");
+      setSearching(true);
+    }
+  };
 
   useEffect(() => {
     window.addEventListener("popstate", (e) => {
@@ -157,10 +163,7 @@ export default function App() {
           width: "100%",
           padding: "1em",
         }}
-        onClick={() => {
-          window.history.pushState({}, "#search", "#search");
-          setSearching(true);
-        }}
+        onClick={startSearching}
       >
         <SearchBar
           setSearchText={setSearchText}
