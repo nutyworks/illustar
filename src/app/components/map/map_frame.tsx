@@ -61,7 +61,7 @@ export default function MapFrame({
   if (!forceLocationEvent.used) {
     forceLocationEvent.used = true;
 
-    const floc = circles.find((circle) => circle.id === selectedLoc);
+    const floc = circles.find((circle) => circle.loc === selectedLoc);
 
     if (floc !== undefined) {
       const x = -(floc.xPos + floc.width / 2 - width / 2);

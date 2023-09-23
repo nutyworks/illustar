@@ -15,7 +15,7 @@ export default function InfoSilderContainer({ circle }: InfoSilderOptions) {
         paddingRight: "1em",
       }}
     >
-      {circle?.id}
+      {circle?.loc}
       <h1>{circle?.name ?? "서클을 선택하세요"}</h1>
     </div>
   );

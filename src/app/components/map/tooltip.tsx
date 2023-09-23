@@ -58,7 +58,7 @@ export default function Tooltip({
         }}
       >
         <center>
-          <p style={{ width: "max-content" }}> {location.id} </p>
+          <p style={{ width: "max-content" }}> {location.loc} </p>
           <p style={{ width: "max-content" }}>{location.name}</p>
           <p style={{ width: "max-content" }}>{location.repr}</p>
         </center>

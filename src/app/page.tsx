@@ -28,13 +28,26 @@ export default function App() {
     new ForceLocationEvent("")
   );
 
-  const dayCircleData = circleData[day];
+  const dayCircleData = circleData.filter((circle) =>
+    circle.days.includes(day)
+  );
   const performSearch = (query: string) => {
     if (query === "") {
       setSearchResult([]);
       return;
     }
-    const res = dayCircleData.filter((circle) => circle.name.includes(query));
+
+    const queries = query.split(" ");
+
+    let res = dayCircleData;
+    queries.forEach((q) => {
+      if (q.startsWith("#") && q.length > 1)
+        res = res.filter((c) => c.tags.includes(q));
+      else if (q.startsWith("@") && q.length > 1)
+        res = res.filter((c) => c.repr.includes(q.slice(1)));
+      else res = res.filter((c) => c.name.includes(q));
+    });
+
     setSearchResult(res);
   };
   const submitHandler = (e: React.FormEvent) => {
@@ -89,7 +102,7 @@ export default function App() {
       }}
     >
       <InfoSilderFrame
-        circle={dayCircleData.find((circle) => circle.id === selectedLoc)}
+        circle={dayCircleData.find((circle) => circle.loc === selectedLoc)}
       />
     </div>
   );

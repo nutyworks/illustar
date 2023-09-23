@@ -7,11 +7,12 @@ export interface CircleOptions {
   yPos: number;
   width: number;
   height: number;
-  id: string;
+  loc: string;
   name: string;
   repr: string;
   urls: string[];
   days: number[];
+  tags: string;
 }
 
 interface CircleDisplayOptions {
@@ -19,11 +20,12 @@ interface CircleDisplayOptions {
   yPos: number;
   width: number;
   height: number;
-  id: string;
+  loc: string;
   name: string;
   repr: string;
   urls: string[];
   days: number[];
+  tags: string;
   hovering: boolean;
   selected: boolean;
   setSelectedLoc: Dispatch<SetStateAction<string | null>>;
@@ -43,7 +45,7 @@ export default function CirleDisplay(opts: CircleDisplayOptions) {
         width: opts.width,
         height: opts.height,
       }}
-      onClick={() => opts.setSelectedLoc(opts.id)}
+      onClick={() => opts.setSelectedLoc(opts.loc)}
     ></button>
   );
 }

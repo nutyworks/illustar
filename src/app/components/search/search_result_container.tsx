@@ -18,11 +18,11 @@ export default function SearchResultContainer({
   const results = result.map((circle) => {
     return (
       <div
-        key={circle.id + circle.name}
+        key={circle.loc + circle.name}
         onClick={() => {
-          setSelectedLoc(circle.id);
+          setSelectedLoc(circle.loc);
           setSearching(false);
-          fireForceLocationEvent(new ForceLocationEvent(circle.id));
+          fireForceLocationEvent(new ForceLocationEvent(circle.loc));
         }}
       >
         <SearchResultCircle {...circle} />
@@ -37,7 +37,7 @@ export default function SearchResultContainer({
   );
 }
 
-function SearchResultCircle({ id, name, repr, days }: CircleOptions) {
+function SearchResultCircle({ loc: id, name, repr, days }: CircleOptions) {
   return (
     <div
       style={{
