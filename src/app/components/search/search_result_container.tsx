@@ -41,17 +41,36 @@ export default function SearchResultContainer({
   );
 }
 
-function SearchResultCircle({ loc: id, name, repr, days }: CircleOptions) {
+function SearchResultCircle({ loc, name, repr, days, tags }: CircleOptions) {
+  const dayType =
+    days.includes(0) && days.includes(1)
+      ? "양일"
+      : days.includes(0)
+      ? "토요일"
+      : "일요일";
   return (
     <div
       style={{
+        alignContent: "center",
         padding: "0.5em 1em 0.5em 1em",
         borderBottom: "1px solid rgb(var(--border-color))",
+        backgroundColor:
+          dayType === "양일"
+            ? "transparent"
+            : dayType === "토요일"
+            ? "rgb(var(--saturday-color), 20%)"
+            : "rgb(var(--sunday-color), 20%)",
       }}
     >
-      {id}
-      <h2>{name}</h2>
-      {repr}
+      {name}
+      <p>
+        <small>
+          {loc} {dayType} {repr}
+        </small>
+      </p>
+      <p>
+        <small>{tags}</small>
+      </p>
     </div>
   );
 }
