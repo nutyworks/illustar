@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 interface SearchBarOptions {
   setSearchText: Dispatch<SetStateAction<string>>;
   performSearch: (query: string) => void;
-  focusHandler: React.FocusEventHandler;
+  focusHandler: React.MouseEventHandler;
   submitHandler: React.FormEventHandler;
   searching: boolean;
   setSearching: Dispatch<SetStateAction<boolean>>;
@@ -49,7 +49,12 @@ export default function SearchBar({
       }}
     >
       <p
-        onClick={() => setSearching(false)}
+        onClick={() => {
+          if (searching) {
+            window.history.go(-1);
+            setSearching(false);
+          }
+        }}
         style={{
           margin: "auto",
         }}
@@ -66,7 +71,7 @@ export default function SearchBar({
         }}
         onInput={inputHandler}
         onSubmit={submitHandler}
-        onFocus={focusHandler}
+        onClick={focusHandler}
       />
     </div>
   );

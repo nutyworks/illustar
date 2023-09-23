@@ -54,7 +54,10 @@ export default function App() {
     const target = e.target as HTMLInputElement;
     performSearch(target.value);
   };
-  const focusHandler = (e: React.FocusEvent) => {
+  const focusHandler = (e: React.MouseEvent) => {
+    if (!isSearching) {
+      window.history.pushState({}, "#search", "#search");
+    }
     setSearching(true);
   };
   const searchPage = (
@@ -107,12 +110,6 @@ export default function App() {
       />
     </div>
   );
-  const startSearching = () => {
-    if (!isSearching) {
-      window.history.pushState({}, "#search", "#search");
-      setSearching(true);
-    }
-  };
 
   useEffect(() => {
     window.addEventListener("popstate", (e) => {
@@ -163,7 +160,6 @@ export default function App() {
           width: "100%",
           padding: "1em",
         }}
-        onClick={startSearching}
       >
         <SearchBar
           setSearchText={setSearchText}
