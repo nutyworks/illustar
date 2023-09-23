@@ -11,7 +11,7 @@ interface InfoSilderFrameOptions {
 
 export default function InfoSilderFrame({ circle }: InfoSilderFrameOptions) {
   let { width, height } = useWindowDimensions();
-  const [silderHeight, setSilderHeight] = useState(height - 100);
+  const [silderPercentage, setSilderPercentage] = useState(1);
   const [touchY, setTouchY] = useState(0);
   const touchStartHandler = (e: React.TouchEvent) => {
     if (e.touches.length >= 2) return;
@@ -19,26 +19,28 @@ export default function InfoSilderFrame({ circle }: InfoSilderFrameOptions) {
   };
   const touchMoveHandler = (e: React.TouchEvent) => {
     if (e.touches.length >= 2) return;
-    const newHeight = silderHeight + e.touches[0].clientY - touchY;
-    setSilderHeight(newHeight < 0 ? 0 : newHeight);
+    const newPercentage =
+      silderPercentage + (e.touches[0].clientY - touchY) / (height - 100);
+    setSilderPercentage(Math.max(0, Math.min(newPercentage, 1)));
     setTouchY(e.touches[0].clientY);
   };
   const touchEndHandler = (e: React.TouchEvent) => {
-    const diff1 = Math.abs(silderHeight);
-    const diff2 = Math.abs(height / 2 - silderHeight);
-    const diff3 = Math.abs(height - 100 - silderHeight);
+    const diff1 = Math.abs(silderPercentage);
+    const diff2 = Math.abs(0.5 - silderPercentage);
+    const diff3 = Math.abs(1 - silderPercentage);
 
-    let newHeight = 0;
+    let newPercentage = 0;
 
-    if (diff1 < diff2 && diff1 < diff3) newHeight = 0;
-    else if (diff3 < diff1 && diff3 < diff2) newHeight = height - 100;
-    else newHeight = height / 2;
+    if (diff1 < diff2 && diff1 < diff3) newPercentage = 0;
+    else if (diff3 < diff1 && diff3 < diff2) newPercentage = 1;
+    else newPercentage = 0.5;
 
     const transitionFrames = 6;
     for (let i = 1; i <= transitionFrames; i++) {
       setTimeout(() => {
-        setSilderHeight(
-          silderHeight + ((newHeight - silderHeight) / transitionFrames) * i
+        setSilderPercentage(
+          silderPercentage +
+            ((newPercentage - silderPercentage) / transitionFrames) * i
         );
       }, i * 16.666666);
     }
@@ -50,7 +52,7 @@ export default function InfoSilderFrame({ circle }: InfoSilderFrameOptions) {
         display: "block",
         width: "100%",
         height: "100%",
-        transform: `translate(0, ${silderHeight}px)`,
+        transform: `translate(0, ${silderPercentage * (height - 100)}px)`,
         pointerEvents: "all",
       }}
       onTouchStart={touchStartHandler}
