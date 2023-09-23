@@ -24,7 +24,10 @@ export default function App() {
 
   const dayCircleData = circleData[day];
   const performSearch = (query: string) => {
-    if (query === "") setSearchResult([]);
+    if (query === "") {
+      setSearchResult([]);
+      return;
+    }
     const res = dayCircleData.filter((circle) => circle.name.includes(query));
     setSearchResult(res);
   };
