@@ -31,7 +31,7 @@ interface CircleDisplayOptions {
   setSelectedLoc: Dispatch<SetStateAction<string | null>>;
 }
 
-export default function CirleDisplay(opts: CircleDisplayOptions) {
+export default function CircleDisplay(opts: CircleDisplayOptions) {
   return (
     <button
       style={{

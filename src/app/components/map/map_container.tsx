@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Dispatch, SetStateAction, useState } from "react";
-import CirleDisplay, { CircleOptions } from "./circle_display";
+import CircleDisplay, { CircleOptions } from "./circle_display";
 import Tooltip from "./tooltip";
 
 interface MapOptions {
@@ -33,7 +33,7 @@ export default function MapContainer({
         onMouseEnter={() => setHoverLoc(data.loc)}
         onMouseLeave={() => setHoverLoc(null)}
       >
-        <CirleDisplay
+        <CircleDisplay
           xPos={data.xPos}
           yPos={data.yPos}
           width={data.width}
@@ -43,6 +43,7 @@ export default function MapContainer({
           repr={data.repr}
           urls={data.urls}
           days={data.days}
+          tags={data.tags}
           hovering={loc?.loc === data.loc}
           selected={selectedLoc === data.loc}
           setSelectedLoc={setSelectedLoc}
