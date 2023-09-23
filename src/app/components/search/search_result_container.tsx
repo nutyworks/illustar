@@ -25,6 +25,7 @@ export default function SearchResultContainer({
           setSelectedLoc(circle.loc);
           setDay(circle.days[0]);
           setSearching(false);
+          window.history.pushState({}, "#", null);
           fireForceLocationEvent(new ForceLocationEvent(circle.loc));
         }}
       >

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ForceLocationEvent } from "./components/map/map_frame";
 import { circleData } from "./data";
 import DaySelectButton from "./components/day_select_button";
@@ -108,6 +108,15 @@ export default function App() {
     </div>
   );
 
+  useEffect(() => {
+    window.addEventListener("popstate", (e) => {
+      if (isSearching) {
+        e.preventDefault();
+        setSearching(false);
+      }
+    });
+  });
+
   return (
     <div
       style={{
@@ -147,6 +156,10 @@ export default function App() {
           position: "fixed",
           width: "100%",
           padding: "1em",
+        }}
+        onClick={() => {
+          window.history.pushState({}, "#search", "#search");
+          setSearching(true);
         }}
       >
         <SearchBar
