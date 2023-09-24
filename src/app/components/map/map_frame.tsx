@@ -13,6 +13,7 @@ export class ForceLocationEvent {
 }
 
 interface MapFrameOptions {
+  day: number;
   circles: CircleOptions[];
   selectedLoc: string | null;
   setSelectedLoc: Dispatch<SetStateAction<string | null>>;
@@ -27,6 +28,7 @@ interface TouchData {
 }
 
 export default function MapFrame({
+  day,
   circles,
   selectedLoc,
   setSelectedLoc,
@@ -303,6 +305,7 @@ export default function MapFrame({
       onTouchCancel={touchEndHandler}
     >
       <MapContainer
+        day={day}
         position={position}
         scaledPosition={scaledPosition}
         ratio={zoomRatio}

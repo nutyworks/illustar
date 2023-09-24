@@ -142,6 +142,7 @@ export default function App() {
         }}
       >
         <MapFrame
+          day={day}
           circles={dayCircleData}
           selectedLoc={selectedLoc}
           setSelectedLoc={setSelectedLoc}

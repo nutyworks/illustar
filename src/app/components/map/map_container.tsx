@@ -5,6 +5,7 @@ import CircleDisplay, { CircleOptions } from "./circle_display";
 import Tooltip from "./tooltip";
 
 interface MapOptions {
+  day: number;
   circles: CircleOptions[];
   ratio: number;
   position: { x: number; y: number };
@@ -15,6 +16,7 @@ interface MapOptions {
 }
 
 export default function MapContainer({
+  day,
   circles,
   position,
   scaledPosition,
@@ -85,8 +87,30 @@ export default function MapContainer({
           }}
         ></svg>
         {elements}
+        {day === 1 && <SundayHide />}
       </div>
       {tooltipElem}
     </>
   );
+}
+
+function SundayHide() {
+  return [
+    { x: 927, y: 730, w: 164, h: 31, color: "#eae8db" },
+    { x: 927, y: 761, w: 164, h: 32, color: "#e8d1d1" },
+    { x: 1041, y: 268, w: 49, h: 179, color: "#eae8db" },
+    { x: 1064, y: 447, w: 26, h: 231, color: "#eae8db" },
+    { x: 1197, y: 146, w: 615, h: 48, color: "#d3dedd" },
+  ].map(({ x, y, w, h, color }) => (
+    <div
+      style={{
+        position: "absolute",
+        top: y,
+        left: x,
+        backgroundColor: color,
+        width: w,
+        height: h,
+      }}
+    ></div>
+  ));
 }
