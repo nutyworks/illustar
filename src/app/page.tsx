@@ -23,7 +23,9 @@ export default function App() {
   const [selectedLoc, setSelectedLoc] = useState<string | null>(null);
   const [searchText, setSearchText] = useState<string>("");
   const [isSearching, setSearching] = useState<boolean>(false);
-  const [searchResult, setSearchResult] = useState<CircleOptions[] | null>([]);
+  const [searchResult, setSearchResult] = useState<CircleOptions[] | null>(
+    null
+  );
   const [forceLocationEvent, fireForceLocationEvent] = useState(
     new ForceLocationEvent("")
   );
