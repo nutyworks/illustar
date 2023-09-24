@@ -47,9 +47,9 @@ export default function App() {
     let res = circleData;
     queries.forEach((q) => {
       if (q.startsWith("#") && q.length > 1)
-        res = res.filter((c) => c.tags.includes(q));
+        res = res.filter((c) => c.tags?.includes(q));
       else if (q.startsWith("@") && q.length > 1)
-        res = res.filter((c) => c.repr.includes(q.slice(1)));
+        res = res.filter((c) => c.repr?.includes(q.slice(1)));
       else if (q === "*토")
         res = res.filter((c) => c.days.includes(0) && !c.days.includes(1));
       else if (q === "*일")
