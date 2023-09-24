@@ -3,7 +3,7 @@ import { CircleOptions } from "../map/circle_display";
 import { ForceLocationEvent } from "../map/map_frame";
 
 interface SearchResultOptions {
-  result: CircleOptions[];
+  result: CircleOptions[] | null;
   setSelectedLoc: Dispatch<SetStateAction<string | null>>;
   setDay: Dispatch<SetStateAction<number>>;
   setSearching: Dispatch<SetStateAction<boolean>>;
@@ -17,7 +17,8 @@ export default function SearchResultContainer({
   setSearching,
   fireForceLocationEvent,
 }: SearchResultOptions) {
-  const results = result.map((circle) => {
+  const resultFound = result?.length ?? 1 > 0;
+  const results = result?.map((circle) => {
     return (
       <div
         key={circle.loc + circle.name}
@@ -34,11 +35,42 @@ export default function SearchResultContainer({
     );
   });
 
-  return (
-    <>
-      <div>{results}</div>
-    </>
+  const empty = (
+    <div
+      style={{
+        width: "100%",
+        padding: "1em",
+      }}
+    >
+      <center>
+        <p>
+          <strong>서클을 찾을 수 없습니다</strong>
+        </p>
+      </center>
+    </div>
   );
+  const searchHelp = (
+    <div
+      style={{
+        width: "100%",
+        padding: "1em",
+      }}
+    >
+      <center>
+        <p>
+          <strong>#태그</strong> - 태그가 포함된 서클을 찾습니다.
+        </p>
+        <p>
+          <strong>@작가</strong> - 작가가 포함된 서클을 찾습니다.
+        </p>
+        <p>
+          <strong>*토, *일</strong> - 해당 요일에만 참가하는 서클을 찾습니다.
+        </p>
+      </center>
+    </div>
+  );
+
+  return <div>{resultFound ? results ?? searchHelp : empty}</div>;
 }
 
 function SearchResultCircle({ loc, name, repr, days, tags }: CircleOptions) {

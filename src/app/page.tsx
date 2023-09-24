@@ -23,7 +23,7 @@ export default function App() {
   const [selectedLoc, setSelectedLoc] = useState<string | null>(null);
   const [searchText, setSearchText] = useState<string>("");
   const [isSearching, setSearching] = useState<boolean>(false);
-  const [searchResult, setSearchResult] = useState<CircleOptions[]>([]);
+  const [searchResult, setSearchResult] = useState<CircleOptions[] | null>([]);
   const [forceLocationEvent, fireForceLocationEvent] = useState(
     new ForceLocationEvent("")
   );
@@ -33,7 +33,7 @@ export default function App() {
   );
   const performSearch = (query: string) => {
     if (query === "") {
-      setSearchResult([]);
+      setSearchResult(null);
       return;
     }
 
@@ -45,6 +45,10 @@ export default function App() {
         res = res.filter((c) => c.tags.includes(q));
       else if (q.startsWith("@") && q.length > 1)
         res = res.filter((c) => c.repr.includes(q.slice(1)));
+      else if (q === "*토")
+        res = res.filter((c) => c.days.includes(0) && !c.days.includes(1));
+      else if (q === "*일")
+        res = res.filter((c) => !c.days.includes(0) && c.days.includes(1));
       else res = res.filter((c) => c.name.includes(q));
     });
 
