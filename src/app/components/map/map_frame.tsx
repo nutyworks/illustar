@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import MapContainer from "./map_container";
 import { CircleOptions } from "./circle_display";
 import useWindowDimensions from "@/app/utils/get_window_dimensions";
+import { ForceSilderPercentageSetEvent } from "../info_silder/info_silder_frame";
 
 export class ForceLocationEvent {
   value: string;
@@ -18,6 +19,9 @@ interface MapFrameOptions {
   selectedLoc: string | null;
   setSelectedLoc: Dispatch<SetStateAction<string | null>>;
   forceLocationEvent: ForceLocationEvent;
+  fireForceSilderPercentageSetEvent: Dispatch<
+    SetStateAction<ForceSilderPercentageSetEvent>
+  >;
 }
 
 interface TouchData {
@@ -33,6 +37,7 @@ export default function MapFrame({
   selectedLoc,
   setSelectedLoc,
   forceLocationEvent,
+  fireForceSilderPercentageSetEvent,
 }: MapFrameOptions) {
   const { width, height } = useWindowDimensions();
   const [zoomRatio, setZoomRatio] = useState(1);
@@ -67,7 +72,7 @@ export default function MapFrame({
 
     if (floc !== undefined) {
       const x = -(floc.xPos + floc.width / 2 - width / 2);
-      const y = -(floc.yPos + floc.height / 2 - height / 2);
+      const y = -(floc.yPos + floc.height / 2 - height / 4);
 
       setZoomRatio(1);
       setPosition({ ...position, x, y });
@@ -313,6 +318,7 @@ export default function MapFrame({
         transformOrigin={transformOrigin}
         selectedLoc={selectedLoc}
         setSelectedLoc={setSelectedLoc}
+        fireForceSilderPercentageSetEvent={fireForceSilderPercentageSetEvent}
       />
     </div>
   );

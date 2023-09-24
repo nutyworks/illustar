@@ -61,3 +61,9 @@ h2 {
   font-size: 1.25em;
   font-weight: 500;
 }
+
+a {
+  color: cornflowerblue;
+  font-weight: 700;
+  text-decoration: underline;
+}

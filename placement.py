@@ -11,14 +11,20 @@ f = open("src/app/data.tsx", "w")
 
 f.write("export const circleData = [")
 
-for ij in cirjson:
-  loc = ij['loc']
+for circle in cirjson:
+  loc = circle['loc']
   x, y, width, height = locmap[loc]
-  name, repr, tags = ij['cname'], ij['repr'], ij['tags']
+  name, repr, tags = circle['cname'], circle['repr'], circle['tags']
   urls = []
   days = []
-  if ij['sat'] == 1: days.append(0)
-  if ij['sun'] == 1: days.append(1)
+  if circle['sat'] == 1: days.append(0)
+  if circle['sun'] == 1: days.append(1)
+
+  for col in ['info_link1', 'info_link2', 'form_link1', 'form_link2', 'etc_link']:
+    link = circle[col]
+    if pd.isna(link): continue
+    urls.append(link)
+
   f.write(
     "{"
     + f'xPos:{x},yPos:{y},width:{width},height:{height},loc:"{loc}",repr:"{repr}",name:"{name}",urls:{urls},days:{days},tags:"{tags}"'

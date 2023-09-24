@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import SearchBar from "./components/search/search_bar";
 import { CircleOptions } from "./components/map/circle_display";
 import SearchResultContainer from "./components/search/search_result_container";
+import { ForceSilderPercentageSetEvent } from "./components/info_silder/info_silder_frame";
 const InfoSilderFrame = dynamic(
   () => import("./components/info_silder/info_silder_frame"),
   {
@@ -29,6 +30,8 @@ export default function App() {
   const [forceLocationEvent, fireForceLocationEvent] = useState(
     new ForceLocationEvent("")
   );
+  const [forceSilderPercentageSetEvent, fireForceSilderPercentageSetEvent] =
+    useState(new ForceSilderPercentageSetEvent(1));
 
   const dayCircleData = circleData.filter((circle) =>
     circle.days.includes(day)
@@ -86,6 +89,7 @@ export default function App() {
           setDay={setDay}
           setSearching={setSearching}
           fireForceLocationEvent={fireForceLocationEvent}
+          fireForceSilderPercentageSetEvent={fireForceSilderPercentageSetEvent}
         />
       </div>
       <div
@@ -113,6 +117,7 @@ export default function App() {
     >
       <InfoSilderFrame
         circle={dayCircleData.find((circle) => circle.loc === selectedLoc)}
+        forceSilderPercentageSetEvent={forceSilderPercentageSetEvent}
       />
     </div>
   );
@@ -147,6 +152,7 @@ export default function App() {
           selectedLoc={selectedLoc}
           setSelectedLoc={setSelectedLoc}
           forceLocationEvent={forceLocationEvent}
+          fireForceSilderPercentageSetEvent={fireForceSilderPercentageSetEvent}
         />
       </div>
       <div

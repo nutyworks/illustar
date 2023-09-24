@@ -7,12 +7,37 @@ import useWindowDimensions from "@/app/utils/get_window_dimensions";
 
 interface InfoSilderFrameOptions {
   circle: CircleOptions | undefined;
+  forceSilderPercentageSetEvent: ForceSilderPercentageSetEvent;
 }
 
-export default function InfoSilderFrame({ circle }: InfoSilderFrameOptions) {
+export class ForceSilderPercentageSetEvent {
+  used: boolean;
+  percentage: number;
+
+  constructor(percentage: number) {
+    this.used = false;
+    this.percentage = percentage;
+  }
+}
+
+export default function InfoSilderFrame({
+  circle,
+  forceSilderPercentageSetEvent,
+}: InfoSilderFrameOptions) {
   let { width, height } = useWindowDimensions();
   const [silderPercentage, setSilderPercentage] = useState(1);
   const [touchY, setTouchY] = useState(0);
+  const setSilderPercentageForce = (newPercentage: number) => {
+    const transitionFrames = 6;
+    for (let i = 1; i <= transitionFrames; i++) {
+      setTimeout(() => {
+        setSilderPercentage(
+          silderPercentage +
+            ((newPercentage - silderPercentage) / transitionFrames) * i
+        );
+      }, i * 16.666666);
+    }
+  };
   const touchStartHandler = (e: React.TouchEvent) => {
     if (e.touches.length >= 2) return;
     setTouchY(e.touches[0].clientY);
@@ -35,18 +60,13 @@ export default function InfoSilderFrame({ circle }: InfoSilderFrameOptions) {
     else if (diff3 < diff1 && diff3 < diff2) newPercentage = 1;
     else newPercentage = 0.5;
 
-    const transitionFrames = 6;
-    for (let i = 1; i <= transitionFrames; i++) {
-      setTimeout(() => {
-        setSilderPercentage(
-          silderPercentage +
-            ((newPercentage - silderPercentage) / transitionFrames) * i
-        );
-      }, i * 16.666666);
-    }
+    setSilderPercentageForce(newPercentage);
   };
 
-  console.log(height, silderPercentage);
+  if (!forceSilderPercentageSetEvent.used) {
+    forceSilderPercentageSetEvent.used = true;
+    setSilderPercentageForce(forceSilderPercentageSetEvent.percentage);
+  }
 
   return (
     <div
@@ -67,6 +87,7 @@ export default function InfoSilderFrame({ circle }: InfoSilderFrameOptions) {
           borderTopRightRadius: 20,
           height: "2em",
           width: "100%",
+          marginBottom: -1,
           backgroundColor: "rgb(var(--background-rgb))",
           display: "flex",
           alignItems: "center",

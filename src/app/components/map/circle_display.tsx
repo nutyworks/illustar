@@ -1,6 +1,7 @@
 "use client";
 
 import { Dispatch, SetStateAction } from "react";
+import { ForceSilderPercentageSetEvent } from "../info_silder/info_silder_frame";
 
 export interface CircleOptions {
   xPos: number;
@@ -29,6 +30,9 @@ interface CircleDisplayOptions {
   hovering: boolean;
   selected: boolean;
   setSelectedLoc: Dispatch<SetStateAction<string | null>>;
+  fireForceSilderPercentageSetEvent: Dispatch<
+    SetStateAction<ForceSilderPercentageSetEvent>
+  >;
 }
 
 export default function CircleDisplay(opts: CircleDisplayOptions) {
@@ -45,7 +49,12 @@ export default function CircleDisplay(opts: CircleDisplayOptions) {
         width: opts.width,
         height: opts.height,
       }}
-      onClick={() => opts.setSelectedLoc(opts.loc)}
+      onClick={() => {
+        opts.setSelectedLoc(opts.loc);
+        opts.fireForceSilderPercentageSetEvent(
+          new ForceSilderPercentageSetEvent(0.5)
+        );
+      }}
     ></button>
   );
 }

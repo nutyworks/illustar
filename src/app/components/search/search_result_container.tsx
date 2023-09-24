@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { CircleOptions } from "../map/circle_display";
 import { ForceLocationEvent } from "../map/map_frame";
+import { ForceSilderPercentageSetEvent } from "../info_silder/info_silder_frame";
 
 interface SearchResultOptions {
   result: CircleOptions[] | null;
@@ -8,6 +9,9 @@ interface SearchResultOptions {
   setDay: Dispatch<SetStateAction<number>>;
   setSearching: Dispatch<SetStateAction<boolean>>;
   fireForceLocationEvent: Dispatch<SetStateAction<ForceLocationEvent>>;
+  fireForceSilderPercentageSetEvent: Dispatch<
+    SetStateAction<ForceSilderPercentageSetEvent>
+  >;
 }
 
 export default function SearchResultContainer({
@@ -16,6 +20,7 @@ export default function SearchResultContainer({
   setDay,
   setSearching,
   fireForceLocationEvent,
+  fireForceSilderPercentageSetEvent,
 }: SearchResultOptions) {
   const resultFound = result?.length ?? 1 > 0;
   const results = result?.map((circle) => {
@@ -28,6 +33,9 @@ export default function SearchResultContainer({
           setSearching(false);
           window.history.go(-1);
           fireForceLocationEvent(new ForceLocationEvent(circle.loc));
+          fireForceSilderPercentageSetEvent(
+            new ForceSilderPercentageSetEvent(0.5)
+          );
         }}
       >
         <SearchResultCircle {...circle} />
