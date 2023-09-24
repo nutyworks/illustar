@@ -103,6 +103,7 @@ function SundayHide() {
     { x: 1197, y: 146, w: 615, h: 48, color: "#d3dedd" },
   ].map(({ x, y, w, h, color }) => (
     <div
+      key={x + (y << 12) + (y << 24) + (w << 36) + (h << 48)}
       style={{
         position: "absolute",
         top: y,
