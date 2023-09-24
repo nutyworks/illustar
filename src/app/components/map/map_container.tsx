@@ -111,6 +111,8 @@ function SundayHide() {
     { x: 1041, y: 268, w: 49, h: 179, color: "#eae8db" },
     { x: 1064, y: 447, w: 26, h: 231, color: "#eae8db" },
     { x: 1197, y: 146, w: 615, h: 48, color: "#d3dedd" },
+    { x: 2250, y: 223, w: 179, h: 74, color: "#e9e4cc" },
+    { x: 2429, y: 223, w: 10, h: 72, color: "#fbf9ed" },
   ].map(({ x, y, w, h, color }) => (
     <div
       key={x + (y << 12) + (y << 24) + (w << 36) + (h << 48)}
