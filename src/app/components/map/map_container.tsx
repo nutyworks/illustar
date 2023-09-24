@@ -98,6 +98,39 @@ export default function MapContainer({
         ></svg>
         {elements}
         {day === 1 && <SundayHide />}
+        <div
+          style={{
+            position: "absolute",
+            top: 1417,
+            left: -400,
+            fontSize: "8em",
+            width: "1000%",
+          }}
+        >
+          <div>이 웹페이지는 모바일 크롬 환경에 최적화되어 있습니다.</div>
+          <div>PC 환경은 곧 지원할 예정입니다.</div>
+          <div>코딩한 사람: lemonajoc</div>
+          <div>
+            데이터 넣은 사람: lemonajoc,{" "}
+            <a
+              href="https://github.com/kevin5871"
+              target="blank"
+              style={{
+                fontWeight: 400,
+                color: "black",
+                textDecoration: "none",
+              }}
+            >
+              sfcatz
+            </a>
+            , Sunghoon, Trestle
+          </div>
+          <div>
+            <a href="https://forms.gle/5NNg4L6X6JrjHtBb7" target="blank">
+              피드백 제출하기
+            </a>
+          </div>
+        </div>
       </div>
       {tooltipElem}
     </>
