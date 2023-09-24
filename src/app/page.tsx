@@ -51,7 +51,7 @@ export default function App() {
         res = res.filter((c) => c.days.includes(0) && !c.days.includes(1));
       else if (q === "*일")
         res = res.filter((c) => !c.days.includes(0) && c.days.includes(1));
-      else res = res.filter((c) => c.name.includes(q));
+      else res = res.filter((c) => c.name.includes(q) || c.loc.includes(q));
     });
 
     setSearchResult(res);

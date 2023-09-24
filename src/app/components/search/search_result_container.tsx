@@ -58,6 +58,9 @@ export default function SearchResultContainer({
     >
       <center>
         <p>
+          <strong>서클 이름, A01</strong> - 서클 이름 또는 위치로 찾습니다.
+        </p>
+        <p>
           <strong>#태그</strong> - 태그가 포함된 서클을 찾습니다.
         </p>
         <p>
