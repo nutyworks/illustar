@@ -4,6 +4,7 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import CircleDisplay, { CircleOptions } from "./circle_display";
 import Tooltip from "./tooltip";
 import { ForceSilderPercentageSetEvent } from "../info_silder/info_silder_frame";
+import { ForceLocationEvent } from "./map_frame";
 
 interface MapOptions {
   day: number;
@@ -14,6 +15,7 @@ interface MapOptions {
   transformOrigin: { x: number; y: number };
   selectedLoc: string | null;
   setSelectedLoc: Dispatch<SetStateAction<string | null>>;
+  fireForceLocationEvent: Dispatch<SetStateAction<ForceLocationEvent>>;
   fireForceSilderPercentageSetEvent: Dispatch<
     SetStateAction<ForceSilderPercentageSetEvent>
   >;
@@ -28,6 +30,7 @@ export default function MapContainer({
   transformOrigin,
   selectedLoc,
   setSelectedLoc,
+  fireForceLocationEvent,
   fireForceSilderPercentageSetEvent,
 }: MapOptions) {
   const [hoverLoc, setHoverLoc] = useState<string | null>(null);
@@ -54,6 +57,7 @@ export default function MapContainer({
           hovering={loc?.loc === data.loc}
           selected={selectedLoc === data.loc}
           setSelectedLoc={setSelectedLoc}
+          fireForceLocationEvent={fireForceLocationEvent}
           fireForceSilderPercentageSetEvent={fireForceSilderPercentageSetEvent}
         />
       </div>

@@ -152,6 +152,7 @@ export default function App() {
           selectedLoc={selectedLoc}
           setSelectedLoc={setSelectedLoc}
           forceLocationEvent={forceLocationEvent}
+          fireForceLocationEvent={fireForceLocationEvent}
           fireForceSilderPercentageSetEvent={fireForceSilderPercentageSetEvent}
         />
       </div>

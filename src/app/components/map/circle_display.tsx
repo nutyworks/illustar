@@ -2,6 +2,7 @@
 
 import { Dispatch, SetStateAction } from "react";
 import { ForceSilderPercentageSetEvent } from "../info_silder/info_silder_frame";
+import { ForceLocationEvent } from "./map_frame";
 
 export interface CircleOptions {
   xPos: number;
@@ -30,6 +31,7 @@ interface CircleDisplayOptions {
   hovering: boolean;
   selected: boolean;
   setSelectedLoc: Dispatch<SetStateAction<string | null>>;
+  fireForceLocationEvent: Dispatch<SetStateAction<ForceLocationEvent>>;
   fireForceSilderPercentageSetEvent: Dispatch<
     SetStateAction<ForceSilderPercentageSetEvent>
   >;
@@ -51,6 +53,7 @@ export default function CircleDisplay(opts: CircleDisplayOptions) {
       }}
       onClick={() => {
         opts.setSelectedLoc(opts.loc);
+        opts.fireForceLocationEvent(new ForceLocationEvent(opts.loc));
         opts.fireForceSilderPercentageSetEvent(
           new ForceSilderPercentageSetEvent(0.5)
         );

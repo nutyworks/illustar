@@ -19,6 +19,7 @@ interface MapFrameOptions {
   selectedLoc: string | null;
   setSelectedLoc: Dispatch<SetStateAction<string | null>>;
   forceLocationEvent: ForceLocationEvent;
+  fireForceLocationEvent: Dispatch<SetStateAction<ForceLocationEvent>>;
   fireForceSilderPercentageSetEvent: Dispatch<
     SetStateAction<ForceSilderPercentageSetEvent>
   >;
@@ -37,6 +38,7 @@ export default function MapFrame({
   selectedLoc,
   setSelectedLoc,
   forceLocationEvent,
+  fireForceLocationEvent,
   fireForceSilderPercentageSetEvent,
 }: MapFrameOptions) {
   const { width, height } = useWindowDimensions();
@@ -71,12 +73,36 @@ export default function MapFrame({
     const floc = circles.find((circle) => circle.loc === selectedLoc);
 
     if (floc !== undefined) {
-      const x = -(floc.xPos + floc.width / 2 - width / 2);
-      const y = -(floc.yPos + floc.height / 2 - height / 4);
+      const newX = -(floc.xPos + floc.width / 2 - width / 2);
+      const newY = -(floc.yPos + floc.height / 2 - height / 4);
+      const newR = 1;
 
-      setZoomRatio(1);
-      setPosition({ ...position, x, y });
-      setScaledPosition({ ...scaledPosition, x, y });
+      const oldX = position.x;
+      const oldY = position.y;
+      const oldSX = scaledPosition.x;
+      const oldSY = scaledPosition.y;
+      const oldR = zoomRatio;
+
+      const transitionFrames = 30;
+      for (let i = 1; i <= transitionFrames; i++) {
+        setTimeout(() => {
+          setZoomRatio(oldR + ((newR - oldR) * i) / transitionFrames);
+          setPosition({
+            ...position,
+            x: oldX + ((newX - oldX) * i) / transitionFrames,
+            y: oldY + ((newY - oldY) * i) / transitionFrames,
+          });
+          setScaledPosition({
+            ...scaledPosition,
+            x: oldSX + ((newX - oldSX) * i) / transitionFrames,
+            y: oldSY + ((newY - oldSY) * i) / transitionFrames,
+          });
+        }, 16.666666 * i);
+      }
+
+      // setZoomRatio(1);
+      // setPosition({ ...position, x: newX, y: newY });
+      // setScaledPosition({ ...scaledPosition, x: newX, y: newY });
     }
   }
 
@@ -318,6 +344,7 @@ export default function MapFrame({
         transformOrigin={transformOrigin}
         selectedLoc={selectedLoc}
         setSelectedLoc={setSelectedLoc}
+        fireForceLocationEvent={fireForceLocationEvent}
         fireForceSilderPercentageSetEvent={fireForceSilderPercentageSetEvent}
       />
     </div>
