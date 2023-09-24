@@ -1,5 +1,8 @@
 import pandas as pd
 
+def na_or_strify(x):
+  return "undefined" if pd.isna(x) else f'"{x}"'
+
 locdata = pd.read_excel("./info.xlsx", "loc")
 locjson = locdata.to_dict(orient='records')
 locmap = dict(map(lambda x: (x["loc"], (x["x"], x["y"], x["w"], x["h"])), locjson))
@@ -14,7 +17,7 @@ f.write("export const circleData = [")
 for circle in cirjson:
   loc = circle['loc']
   x, y, width, height = locmap[loc]
-  name, repr, tags = circle['cname'], circle['repr'], circle['tags']
+  name, repr, tags = circle['cname'], na_or_strify(circle['repr']), na_or_strify(circle['tags'])
   urls = []
   days = []
   if circle['sat'] == 1: days.append(0)
@@ -27,7 +30,7 @@ for circle in cirjson:
 
   f.write(
     "{"
-    + f'xPos:{x},yPos:{y},width:{width},height:{height},loc:"{loc}",repr:"{repr}",name:"{name}",urls:{urls},days:{days},tags:"{tags}"'
+    + f'xPos:{x},yPos:{y},width:{width},height:{height},loc:"{loc}",repr:{repr},name:"{name}",urls:{urls},days:{days},tags:{tags}'
     + "},"
   )
 f.write("];")

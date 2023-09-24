@@ -11,10 +11,10 @@ export interface CircleOptions {
   height: number;
   loc: string;
   name: string;
-  repr: string;
+  repr: string | undefined;
   urls: string[];
   days: number[];
-  tags: string;
+  tags: string | undefined;
 }
 
 interface CircleDisplayOptions {
@@ -24,10 +24,10 @@ interface CircleDisplayOptions {
   height: number;
   loc: string;
   name: string;
-  repr: string;
+  repr: string | undefined;
   urls: string[];
   days: number[];
-  tags: string;
+  tags: string | undefined;
   hovering: boolean;
   selected: boolean;
   setSelectedLoc: Dispatch<SetStateAction<string | null>>;
