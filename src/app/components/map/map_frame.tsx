@@ -42,17 +42,18 @@ export default function MapFrame({
   fireForceSilderPercentageSetEvent,
 }: MapFrameOptions) {
   const { width, height } = useWindowDimensions();
-  const [zoomRatio, setZoomRatio] = useState(1);
+  const [zoomRatio, setZoomRatio] = useState(0.1);
   const [scaledPosition, setScaledPosition] = useState({
-    x: 0,
-    y: 0,
+    x: (width - 330.7 / 1.5) / 2,
+    y: (height - 141.7 / 1.5) / 2,
     oldX: 0,
     oldY: 0,
   });
+  // 3307 × 1417
   const [oldScaledPosition, setOldScaledPosition] = useState(scaledPosition);
   const [position, setPosition] = useState({
-    x: 0,
-    y: 0,
+    x: ((width - 330.7 / 1.5) / 2) * 10,
+    y: ((height - 141.7 / 1.5) / 2) * 10,
     dragInitX: 0,
     dragInitY: 0,
     oldContainerX: 0,
@@ -66,6 +67,8 @@ export default function MapFrame({
   });
   const [isDragging, setDragging] = useState(false);
   const [noDrag, setNoDrag] = useState(true);
+
+  console.log(scaledPosition, position, transformOrigin);
 
   if (!forceLocationEvent.used) {
     forceLocationEvent.used = true;
@@ -258,7 +261,7 @@ export default function MapFrame({
       };
 
       const newZoomRatio = Math.min(
-        Math.max(0.3, zoomRatio + (d2 - d1) * 0.005),
+        Math.max(0.1, zoomRatio + (d2 - d1) * 0.005),
         5
       );
       const newPosition = {
