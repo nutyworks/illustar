@@ -83,7 +83,7 @@ export default function MapFrame({
       const oldSY = scaledPosition.y;
       const oldR = zoomRatio;
 
-      const transitionFrames = 30;
+      const transitionFrames = 10;
       for (let i = 1; i <= transitionFrames; i++) {
         setTimeout(() => {
           setZoomRatio(oldR + ((newR - oldR) * i) / transitionFrames);
