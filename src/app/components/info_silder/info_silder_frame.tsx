@@ -27,6 +27,7 @@ export default function InfoSilderFrame({
   let { width, height } = useWindowDimensions();
   const [silderPercentage, setSilderPercentage] = useState(1);
   const [touchY, setTouchY] = useState(0);
+  const [isDragging, setDragging] = useState(false);
   const setSilderPercentageForce = (newPercentage: number) => {
     const transitionFrames = 6;
     for (let i = 1; i <= transitionFrames; i++) {
@@ -37,6 +38,31 @@ export default function InfoSilderFrame({
         );
       }, i * 16.666666);
     }
+  };
+  const mouseDownHandler = (e: React.MouseEvent) => {
+    setDragging(true);
+    setTouchY(e.clientY);
+  };
+  const mouseMoveHandler = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    const newPercentage =
+      silderPercentage + (e.clientY - touchY) / (height - 100);
+    setSilderPercentage(Math.max(0, Math.min(newPercentage, 1)));
+    setTouchY(e.clientY);
+  };
+  const mouseUpHandler = (e: React.MouseEvent) => {
+    const diff1 = Math.abs(silderPercentage);
+    const diff2 = Math.abs(0.5 - silderPercentage);
+    const diff3 = Math.abs(1 - silderPercentage);
+
+    let newPercentage = 0;
+
+    if (diff1 < diff2 && diff1 < diff3) newPercentage = 0;
+    else if (diff3 < diff1 && diff3 < diff2) newPercentage = 1;
+    else newPercentage = 0.5;
+
+    setSilderPercentageForce(newPercentage);
+    setDragging(false);
   };
   const touchStartHandler = (e: React.TouchEvent) => {
     if (e.touches.length >= 2) return;
@@ -80,6 +106,9 @@ export default function InfoSilderFrame({
       onTouchStart={touchStartHandler}
       onTouchMove={touchMoveHandler}
       onTouchEnd={touchEndHandler}
+      onMouseDown={mouseDownHandler}
+      onMouseMove={mouseMoveHandler}
+      onMouseUp={mouseUpHandler}
     >
       <div
         style={{
