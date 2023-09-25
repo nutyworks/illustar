@@ -49,7 +49,6 @@ export default function MapFrame({
     oldX: 0,
     oldY: 0,
   });
-  // 3307 × 1417
   const [oldScaledPosition, setOldScaledPosition] = useState(scaledPosition);
   const [position, setPosition] = useState({
     x: ((width - 330.7 / 1.5) / 2) * 10,
@@ -67,8 +66,6 @@ export default function MapFrame({
   });
   const [isDragging, setDragging] = useState(false);
   const [noDrag, setNoDrag] = useState(true);
-
-  console.log(scaledPosition, position, transformOrigin);
 
   if (!forceLocationEvent.used) {
     forceLocationEvent.used = true;
@@ -102,14 +99,11 @@ export default function MapFrame({
           });
         }, 16.666666 * i);
       }
-
-      // setZoomRatio(1);
-      // setPosition({ ...position, x: newX, y: newY });
-      // setScaledPosition({ ...scaledPosition, x: newX, y: newY });
     }
   }
 
   const wheelHandler = (e: React.WheelEvent) => {
+    console.log(e);
     const newTransformOrigin = {
       x: e.clientX,
       y: e.clientY,
