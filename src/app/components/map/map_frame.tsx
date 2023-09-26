@@ -44,18 +44,19 @@ export default function MapFrame({
   fireForceSilderPercentageSetEvent,
 }: MapFrameOptions) {
   const { width, height } = useWindowDimensions();
-  const isSidebar = width > height || width > 800;
-  const [zoomRatio, setZoomRatio] = useState(0.1);
+  const isSidebar = width > height || width >= 800;
+  const initialRatio = width / 3307;
+  const [zoomRatio, setZoomRatio] = useState(initialRatio);
   const [scaledPosition, setScaledPosition] = useState({
-    x: (width - 330.7 / 1.5) / 2,
-    y: (height - 141.7 / 1.5) / 2,
+    x: (width - (3307 * initialRatio) / 1.5) / 2,
+    y: (height - (1417 * initialRatio) / 1.5) / 2,
     oldX: 0,
     oldY: 0,
   });
   const [oldScaledPosition, setOldScaledPosition] = useState(scaledPosition);
   const [position, setPosition] = useState({
-    x: ((width - 330.7 / 1.5) / 2) * 10,
-    y: ((height - 141.7 / 1.5) / 2) * 10,
+    x: (width - (3307 * initialRatio) / 1.5) / 2 / initialRatio,
+    y: (height - (1417 * initialRatio) / 1.5) / 2 / initialRatio,
     dragInitX: 0,
     dragInitY: 0,
     oldContainerX: 0,

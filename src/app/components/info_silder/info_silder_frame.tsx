@@ -29,7 +29,7 @@ export default function InfoSilderFrame({
   setSilderPercentage,
 }: InfoSilderFrameOptions) {
   let { width, height } = useWindowDimensions();
-  const isSidebar = width > 800;
+  const isSidebar = width >= 800;
   const [touchY, setTouchY] = useState(0);
   const [isDragging, setDragging] = useState(false);
   const setSilderPercentageForce = (newPercentage: number) => {
