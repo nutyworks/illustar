@@ -9,6 +9,7 @@ import { ForceLocationEvent } from "./map_frame";
 interface MapOptions {
   day: number;
   circles: CircleOptions[];
+  favoriteCircles: number[];
   ratio: number;
   position: { x: number; y: number };
   scaledPosition: { x: number; y: number };
@@ -24,6 +25,7 @@ interface MapOptions {
 export default function MapContainer({
   day,
   circles,
+  favoriteCircles,
   position,
   scaledPosition,
   ratio: zoomRatio,
@@ -44,6 +46,7 @@ export default function MapContainer({
         onMouseLeave={() => setHoverLoc(null)}
       >
         <CircleDisplay
+          _id={data._id}
           xPos={data.xPos}
           yPos={data.yPos}
           width={data.width}
@@ -56,6 +59,7 @@ export default function MapContainer({
           tags={data.tags}
           hovering={loc?.loc === data.loc}
           selected={selectedLoc === data.loc}
+          favorite={favoriteCircles.includes(data._id)}
           setSelectedLoc={setSelectedLoc}
           fireForceLocationEvent={fireForceLocationEvent}
           fireForceSilderPercentageSetEvent={fireForceSilderPercentageSetEvent}

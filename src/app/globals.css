@@ -4,6 +4,8 @@
 
 :root {
   --circle-color: 50, 50, 50;
+  --circle-favorite-hovering-color: 255, 115, 170;
+  --circle-favorite-color: 255, 41, 126;
   --circle-hovering-color: 255, 255, 255, 50%;
   --circle-selected-color: 183, 79, 247;
   --tooltip-background-color: 50, 50, 50;

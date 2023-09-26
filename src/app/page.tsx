@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ForceLocationEvent } from "./components/map/map_frame";
 import { circleData } from "./data";
 import DaySelectButton from "./components/day_select_button";
@@ -9,6 +9,7 @@ import SearchBar from "./components/search/search_bar";
 import { CircleOptions } from "./components/map/circle_display";
 import SearchResultContainer from "./components/search/search_result_container";
 import { ForceSilderPercentageSetEvent } from "./components/info_silder/info_silder_frame";
+import { getCookie, setCookie } from "./utils/cookie";
 const InfoSilderFrame = dynamic(
   () => import("./components/info_silder/info_silder_frame"),
   {
@@ -33,6 +34,18 @@ export default function App() {
   );
   const [forceSilderPercentageSetEvent, fireForceSilderPercentageSetEvent] =
     useState(new ForceSilderPercentageSetEvent(1));
+
+  console.log(getCookie("favorites"));
+  const [favoriteCircles, setFavoriteCircles] = useState<number[]>(
+    ((getCookie("favorites") as string) ?? "")
+      .split(";")
+      .map((x) => Number.parseInt(x))
+      .filter((x) => x)
+  );
+
+  useMemo(() => {
+    setCookie("favorites", favoriteCircles.map((x) => x.toString()).join(";"));
+  }, [favoriteCircles]);
 
   const dayCircleData = circleData.filter((circle) =>
     circle.days.includes(day)
@@ -123,6 +136,8 @@ export default function App() {
     >
       <InfoSilderFrame
         circle={dayCircleData.find((circle) => circle.loc === selectedLoc)}
+        favoriteCircles={favoriteCircles}
+        setFavoriteCircles={setFavoriteCircles}
         forceSilderPercentageSetEvent={forceSilderPercentageSetEvent}
         silderPercentage={silderPercentage}
         setSilderPercentage={setSilderPercentage}
@@ -157,6 +172,7 @@ export default function App() {
         <MapFrame
           day={day}
           circles={dayCircleData}
+          favoriteCircles={favoriteCircles}
           selectedLoc={selectedLoc}
           setSelectedLoc={setSelectedLoc}
           forceLocationEvent={forceLocationEvent}

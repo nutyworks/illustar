@@ -7,6 +7,8 @@ import useWindowDimensions from "@/app/utils/get_window_dimensions";
 
 interface InfoSilderFrameOptions {
   circle: CircleOptions | undefined;
+  favoriteCircles: number[];
+  setFavoriteCircles: Dispatch<SetStateAction<number[]>>;
   forceSilderPercentageSetEvent: ForceSilderPercentageSetEvent;
   silderPercentage: number;
   setSilderPercentage: Dispatch<SetStateAction<number>>;
@@ -24,6 +26,8 @@ export class ForceSilderPercentageSetEvent {
 
 export default function InfoSilderFrame({
   circle,
+  favoriteCircles,
+  setFavoriteCircles,
   forceSilderPercentageSetEvent,
   silderPercentage,
   setSilderPercentage,
@@ -128,7 +132,11 @@ export default function InfoSilderFrame({
           borderRadius: 3,
         }}
       ></p>
-      <InfoSilderContainer circle={circle} />
+      <InfoSilderContainer
+        circle={circle}
+        favoriteCircles={favoriteCircles}
+        setFavoriteCircles={setFavoriteCircles}
+      />
     </div>
   );
 
@@ -142,7 +150,11 @@ export default function InfoSilderFrame({
         boxShadow: "1px 0 10px 1px gray",
       }}
     >
-      <InfoSilderContainer circle={circle} />
+      <InfoSilderContainer
+        circle={circle}
+        favoriteCircles={favoriteCircles}
+        setFavoriteCircles={setFavoriteCircles}
+      />
     </div>
   );
 

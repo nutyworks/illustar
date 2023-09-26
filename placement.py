@@ -15,6 +15,7 @@ f = open("src/app/data.tsx", "w")
 f.write("export const circleData = [")
 
 for circle in cirjson:
+  _id = circle['cid']
   loc = circle['loc']
   x, y, width, height = locmap[loc]
   name, repr, tags = circle['cname'], na_or_strify(circle['repr']), na_or_strify(circle['tags'])
@@ -30,7 +31,7 @@ for circle in cirjson:
 
   f.write(
     "{"
-    + f'xPos:{x},yPos:{y},width:{width},height:{height},loc:"{loc}",repr:{repr},name:"{name}",urls:{urls},days:{days},tags:{tags}'
+    + f'_id:{_id},xPos:{x},yPos:{y},width:{width},height:{height},loc:"{loc}",repr:{repr},name:"{name}",urls:{urls},days:{days},tags:{tags}'
     + "},"
   )
 f.write("];")

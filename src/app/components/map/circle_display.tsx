@@ -5,6 +5,7 @@ import { ForceSilderPercentageSetEvent } from "../info_silder/info_silder_frame"
 import { ForceLocationEvent } from "./map_frame";
 
 export interface CircleOptions {
+  _id: number;
   xPos: number;
   yPos: number;
   width: number;
@@ -18,6 +19,7 @@ export interface CircleOptions {
 }
 
 interface CircleDisplayOptions {
+  _id: number;
   xPos: number;
   yPos: number;
   width: number;
@@ -30,6 +32,7 @@ interface CircleDisplayOptions {
   tags: string | undefined;
   hovering: boolean;
   selected: boolean;
+  favorite: boolean;
   setSelectedLoc: Dispatch<SetStateAction<string | null>>;
   fireForceLocationEvent: Dispatch<SetStateAction<ForceLocationEvent>>;
   fireForceSilderPercentageSetEvent: Dispatch<
@@ -45,7 +48,11 @@ export default function CircleDisplay(opts: CircleDisplayOptions) {
         top: opts.yPos,
         left: opts.xPos,
         backgroundColor:
-          (opts.selected && "rgba(var(--circle-selected-color))") ||
+          (opts.selected && "rgb(var(--circle-selected-color))") ||
+          (opts.favorite &&
+            opts.hovering &&
+            "rgb(var(--circle-favorite-color))") ||
+          (opts.favorite && "rgb(var(--circle-favorite-color))") ||
           (opts.hovering && "rgba(var(--circle-hovering-color))") ||
           "transparent",
         width: opts.width,
