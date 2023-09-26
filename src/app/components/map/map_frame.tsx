@@ -19,6 +19,7 @@ interface MapFrameOptions {
   selectedLoc: string | null;
   setSelectedLoc: Dispatch<SetStateAction<string | null>>;
   forceLocationEvent: ForceLocationEvent;
+  setSilderPercentage: Dispatch<SetStateAction<number>>;
   fireForceLocationEvent: Dispatch<SetStateAction<ForceLocationEvent>>;
   fireForceSilderPercentageSetEvent: Dispatch<
     SetStateAction<ForceSilderPercentageSetEvent>
@@ -38,6 +39,7 @@ export default function MapFrame({
   selectedLoc,
   setSelectedLoc,
   forceLocationEvent,
+  setSilderPercentage,
   fireForceLocationEvent,
   fireForceSilderPercentageSetEvent,
 }: MapFrameOptions) {
@@ -170,9 +172,12 @@ export default function MapFrame({
     if (noDrag) {
       setPosition(oldPosition);
       setScaledPosition(oldScaledPosition);
+      setSelectedLoc(null);
+      setSilderPercentage(1);
     }
   };
   const touchDownHandler = (e: React.TouchEvent) => {
+    setNoDrag(true);
     for (let i = 0; i < e.changedTouches.length; i++) {
       const touch = e.changedTouches[i];
 
@@ -187,6 +192,7 @@ export default function MapFrame({
     }
   };
   const touchMoveHandler = (e: React.TouchEvent) => {
+    setNoDrag(false);
     const oldTouches = touches;
     const currentTouches = touches.slice();
     for (let i = 0; i < currentTouches.length; i++) {
@@ -295,6 +301,10 @@ export default function MapFrame({
   };
   const touchEndHandler = (e: React.TouchEvent) => {
     touchMoveHandler(e);
+    if (noDrag) {
+      setSelectedLoc(null);
+      setSilderPercentage(1);
+    }
     for (let i = 0; i < e.changedTouches.length; i++) {
       const touch = e.changedTouches[i];
 

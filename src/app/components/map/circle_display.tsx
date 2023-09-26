@@ -51,12 +51,13 @@ export default function CircleDisplay(opts: CircleDisplayOptions) {
         width: opts.width,
         height: opts.height,
       }}
-      onClick={() => {
+      onClick={(e) => {
         opts.setSelectedLoc(opts.loc);
         opts.fireForceLocationEvent(new ForceLocationEvent(opts.loc));
         opts.fireForceSilderPercentageSetEvent(
           new ForceSilderPercentageSetEvent(0.5)
         );
+        e.stopPropagation();
       }}
     ></button>
   );

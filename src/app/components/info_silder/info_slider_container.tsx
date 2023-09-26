@@ -9,8 +9,8 @@ export default function InfoSilderContainer({ circle }: InfoSilderOptions) {
     return (
       <div
         style={{
-          width: "100%",
           height: "100%",
+          width: "100%",
           backgroundColor: "rgb(var(--background-rgb))",
           paddingLeft: "1em",
           paddingRight: "1em",
@@ -24,8 +24,8 @@ export default function InfoSilderContainer({ circle }: InfoSilderOptions) {
   return (
     <div
       style={{
-        width: "100%",
         height: "100%",
+        width: "100%",
         backgroundColor: "rgb(var(--background-rgb))",
         paddingLeft: "1em",
         paddingRight: "1em",

@@ -27,6 +27,7 @@ export default function App() {
   const [searchResult, setSearchResult] = useState<CircleOptions[] | null>(
     null
   );
+  const [silderPercentage, setSilderPercentage] = useState(1);
   const [forceLocationEvent, fireForceLocationEvent] = useState(
     new ForceLocationEvent("")
   );
@@ -62,26 +63,30 @@ export default function App() {
   const submitHandler = (e: React.FormEvent) => {
     const target = e.target as HTMLInputElement;
     performSearch(target.value);
+    e.stopPropagation();
   };
   const focusHandler = (e: React.MouseEvent) => {
     if (!isSearching) {
       window.history.pushState({}, "#search", "#search");
     }
     setSearching(true);
+    e.stopPropagation();
   };
   const searchPage = (
     <>
       <div
+        className="searchBar"
         style={{
+          boxShadow: "1px 0 10px 1px gray",
           display: "block",
           position: "fixed",
-          width: "100%",
           height: "100%",
           backgroundColor: "white",
           overflow: "auto",
           pointerEvents: "all",
           paddingTop: "4.75em",
         }}
+        onClick={(e) => e.stopPropagation()}
       >
         <SearchResultContainer
           result={searchResult}
@@ -93,31 +98,34 @@ export default function App() {
         />
       </div>
       <div
+        className="searchBar"
         style={{
           display: "block",
           position: "fixed",
-          width: "100%",
           height: "4.75em",
           backgroundColor: "white",
           borderBottom: "1px solid rgb(var(--border-color))",
-          boxShadow: "1px 1px 15px 1px gray",
         }}
+        onClick={(e) => e.stopPropagation()}
       ></div>
     </>
   );
   const infoSilder = (
     <div
+      className="searchBar"
       style={{
         position: "absolute",
         display: "block",
-        width: "100%",
         height: "100%",
         pointerEvents: "none",
       }}
+      onClick={(e) => e.stopPropagation()}
     >
       <InfoSilderFrame
         circle={dayCircleData.find((circle) => circle.loc === selectedLoc)}
         forceSilderPercentageSetEvent={forceSilderPercentageSetEvent}
+        silderPercentage={silderPercentage}
+        setSilderPercentage={setSilderPercentage}
       />
     </div>
   );
@@ -152,28 +160,33 @@ export default function App() {
           selectedLoc={selectedLoc}
           setSelectedLoc={setSelectedLoc}
           forceLocationEvent={forceLocationEvent}
+          setSilderPercentage={setSilderPercentage}
           fireForceLocationEvent={fireForceLocationEvent}
           fireForceSilderPercentageSetEvent={fireForceSilderPercentageSetEvent}
         />
       </div>
       <div
+        className="daySelectButton"
         style={{
           display: "block",
           position: "fixed",
-          right: "1em",
-          top: "4.75em",
         }}
       >
         <DaySelectButton day={day} setDay={setDay} />
       </div>
       {isSearching && searchPage}
+      {isSearching || infoSilder}
       <div
+        className="searchBar"
         style={{
           display: "block",
           position: "fixed",
-          width: "100%",
           padding: "1em",
+          transform: `translateY(${
+            silderPercentage < 0.25 ? (0.25 - silderPercentage) * -1000 : 0
+          }px)`,
         }}
+        onClick={(e) => e.stopPropagation()}
       >
         <SearchBar
           setSearchText={setSearchText}
@@ -184,7 +197,6 @@ export default function App() {
           setSearching={setSearching}
         />
       </div>
-      {isSearching || infoSilder}
     </div>
   );
 }

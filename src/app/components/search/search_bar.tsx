@@ -37,8 +37,8 @@ export default function SearchBar({
   return (
     <div
       style={{
-        width: "100%",
         borderRadius: "2em",
+        width: "100%",
         border: "1px solid rgb(var(--border-color))",
         background: "rgb(var(--background-rgb))",
         padding: "0.5em",
@@ -63,7 +63,7 @@ export default function SearchBar({
       </p>
       <input
         type="Back"
-        placeholder="부스 검색"
+        placeholder="서클 검색"
         style={{
           marginLeft: "0.5em",
           width: "100%",

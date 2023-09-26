@@ -107,8 +107,7 @@ export default function MapContainer({
             width: "1000%",
           }}
         >
-          <div>이 웹페이지는 모바일 크롬 환경에 최적화되어 있습니다.</div>
-          <div>PC 환경은 곧 지원할 예정입니다.</div>
+          <div>이 웹페이지는 Chrome에 최적화되어 있습니다.</div>
           <div>코딩한 사람: 레몬</div>
           <div>
             데이터 넣은 사람: 레몬,{" "}

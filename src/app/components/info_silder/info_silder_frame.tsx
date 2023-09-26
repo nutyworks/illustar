@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { CircleOptions } from "../map/circle_display";
 import InfoSilderContainer from "./info_slider_container";
 import useWindowDimensions from "@/app/utils/get_window_dimensions";
@@ -8,6 +8,8 @@ import useWindowDimensions from "@/app/utils/get_window_dimensions";
 interface InfoSilderFrameOptions {
   circle: CircleOptions | undefined;
   forceSilderPercentageSetEvent: ForceSilderPercentageSetEvent;
+  silderPercentage: number;
+  setSilderPercentage: Dispatch<SetStateAction<number>>;
 }
 
 export class ForceSilderPercentageSetEvent {
@@ -23,9 +25,11 @@ export class ForceSilderPercentageSetEvent {
 export default function InfoSilderFrame({
   circle,
   forceSilderPercentageSetEvent,
+  silderPercentage,
+  setSilderPercentage,
 }: InfoSilderFrameOptions) {
   let { width, height } = useWindowDimensions();
-  const [silderPercentage, setSilderPercentage] = useState(1);
+  const isSidebar = width > 800;
   const [touchY, setTouchY] = useState(0);
   const [isDragging, setDragging] = useState(false);
   const setSilderPercentageForce = (newPercentage: number) => {
@@ -49,6 +53,7 @@ export default function InfoSilderFrame({
       silderPercentage + (e.clientY - touchY) / (height - 100);
     setSilderPercentage(Math.max(0, Math.min(newPercentage, 1)));
     setTouchY(e.clientY);
+    e.stopPropagation();
   };
   const mouseUpHandler = (e: React.MouseEvent) => {
     const diff1 = Math.abs(silderPercentage);
@@ -63,10 +68,12 @@ export default function InfoSilderFrame({
 
     setSilderPercentageForce(newPercentage);
     setDragging(false);
+    e.stopPropagation();
   };
   const touchStartHandler = (e: React.TouchEvent) => {
     if (e.touches.length >= 2) return;
     setTouchY(e.touches[0].clientY);
+    e.stopPropagation();
   };
   const touchMoveHandler = (e: React.TouchEvent) => {
     if (e.touches.length >= 2) return;
@@ -74,6 +81,7 @@ export default function InfoSilderFrame({
       silderPercentage + (e.touches[0].clientY - touchY) / (height - 100);
     setSilderPercentage(Math.max(0, Math.min(newPercentage, 1)));
     setTouchY(e.touches[0].clientY);
+    e.stopPropagation();
   };
   const touchEndHandler = (e: React.TouchEvent) => {
     const diff1 = Math.abs(silderPercentage);
@@ -87,6 +95,7 @@ export default function InfoSilderFrame({
     else newPercentage = 0.5;
 
     setSilderPercentageForce(newPercentage);
+    e.stopPropagation();
   };
 
   if (!forceSilderPercentageSetEvent.used) {
@@ -94,13 +103,60 @@ export default function InfoSilderFrame({
     setSilderPercentageForce(forceSilderPercentageSetEvent.percentage);
   }
 
-  return (
+  const sildeContainer = (
+    <div
+      style={{
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        width: "100%",
+        height: "100%",
+        marginBottom: -1,
+        backgroundColor: "rgb(var(--background-rgb))",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        boxShadow: "0 -5px 10px 1px rgb(var(--shadow-color))",
+      }}
+    >
+      <p
+        style={{
+          marginTop: 10,
+          marginBottom: 10,
+          width: 100,
+          height: 6,
+          backgroundColor: "rgb(var(--silder-handle-color))",
+          borderRadius: 3,
+        }}
+      ></p>
+      <InfoSilderContainer circle={circle} />
+    </div>
+  );
+
+  const sideContainer = (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        paddingTop: "4.75em",
+        background: "rgb(var(--background-rgb))",
+        boxShadow: "1px 0 10px 1px gray",
+      }}
+    >
+      <InfoSilderContainer circle={circle} />
+    </div>
+  );
+
+  return isSidebar && circle === undefined ? (
+    <></>
+  ) : (
     <div
       style={{
         display: "block",
         width: "100%",
         height: "100%",
-        transform: `translate(0, ${silderPercentage * (height - 100)}px)`,
+        transform: `translate(0, ${
+          isSidebar ? 0 : silderPercentage * (height - 100)
+        }px)`,
         pointerEvents: "all",
       }}
       onTouchStart={touchStartHandler}
@@ -110,30 +166,7 @@ export default function InfoSilderFrame({
       onMouseMove={mouseMoveHandler}
       onMouseUp={mouseUpHandler}
     >
-      <div
-        style={{
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
-          height: "2em",
-          width: "100%",
-          marginBottom: -1,
-          backgroundColor: "rgb(var(--background-rgb))",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          boxShadow: "0 -5px 10px 1px rgb(var(--shadow-color))",
-        }}
-      >
-        <p
-          style={{
-            width: 100,
-            height: 6,
-            backgroundColor: "rgb(var(--silder-handle-color))",
-            borderRadius: 3,
-          }}
-        ></p>
-      </div>
-      <InfoSilderContainer circle={circle} />
+      {isSidebar ? sideContainer : sildeContainer}
     </div>
   );
 }

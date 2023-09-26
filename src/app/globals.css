@@ -30,6 +30,39 @@
   touch-action: manipulation;
 }
 
+.searchBar, .infoSilde {
+  width: 400px;
+}
+
+.daySelectButton {
+  right: 1em;
+  top: 1em;
+}
+
+@media screen and (orientation:portrait) and (max-width: 800px) /* mobile portrait */
+{
+  .searchBar, .infoSilde {
+    width: 100%;
+  }
+
+  .daySelectButton {
+    right: 1em;
+    top: 4.75em;
+  }
+}
+
+@media screen and (orientation:landscape) and (max-height: 800px) /* mobile landscape */
+{
+  .searchBar, .infoSilde {
+    width: 50%;
+  }
+
+  .daySelectButton {
+    right: 1em;
+    top: 1em;
+  }
+}
+
 /* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
