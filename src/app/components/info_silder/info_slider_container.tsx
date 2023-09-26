@@ -67,6 +67,7 @@ export default function InfoSilderContainer({
     <div
       style={{
         backgroundColor: "rgb(var(--background-rgb))",
+        width: "100%",
         paddingLeft: "1em",
         paddingRight: "1em",
       }}
