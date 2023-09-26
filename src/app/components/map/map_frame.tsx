@@ -44,6 +44,7 @@ export default function MapFrame({
   fireForceSilderPercentageSetEvent,
 }: MapFrameOptions) {
   const { width, height } = useWindowDimensions();
+  const isSidebar = width > height || width > 800;
   const [zoomRatio, setZoomRatio] = useState(0.1);
   const [scaledPosition, setScaledPosition] = useState({
     x: (width - 330.7 / 1.5) / 2,
@@ -75,8 +76,12 @@ export default function MapFrame({
     const floc = circles.find((circle) => circle.loc === selectedLoc);
 
     if (floc !== undefined) {
-      const newX = -(floc.xPos + floc.width / 2 - width / 2);
-      const newY = -(floc.yPos + floc.height / 2 - height / 4);
+      const newX = isSidebar
+        ? -(floc.xPos + floc.width / 2 - 400 - (width - 400) / 2)
+        : -(floc.xPos + floc.width / 2 - width / 2);
+      const newY = isSidebar
+        ? -(floc.yPos + floc.height / 2 - height / 2)
+        : -(floc.yPos + floc.height / 2 - height / 4);
       const newR = 1;
 
       const oldX = position.x;
