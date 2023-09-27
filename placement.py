@@ -31,7 +31,7 @@ for circle in cirjson:
 
   f.write(
     "{"
-    + f'_id:{_id},xPos:{x},yPos:{y},width:{width},height:{height},loc:"{loc}",repr:{repr},name:"{name}",urls:{urls},days:{days},tags:{tags}'
+    + f'_id:"{_id}",xPos:{x},yPos:{y},width:{width},height:{height},loc:"{loc}",repr:{repr},name:"{name}",urls:{urls},days:{days},tags:{tags}'
     + "},"
   )
 f.write("];")

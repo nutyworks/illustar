@@ -5,11 +5,12 @@ import CircleDisplay, { CircleOptions } from "./circle_display";
 import Tooltip from "./tooltip";
 import { ForceSilderPercentageSetEvent } from "../info_silder/info_silder_frame";
 import { ForceLocationEvent } from "./map_frame";
+import { PersonalData } from "@/app/data/personal_circle_data";
 
 interface MapOptions {
   day: number;
   circles: CircleOptions[];
-  favoriteCircles: number[];
+  personalData: PersonalData;
   ratio: number;
   position: { x: number; y: number };
   scaledPosition: { x: number; y: number };
@@ -25,7 +26,7 @@ interface MapOptions {
 export default function MapContainer({
   day,
   circles,
-  favoriteCircles,
+  personalData,
   position,
   scaledPosition,
   ratio: zoomRatio,
@@ -41,7 +42,7 @@ export default function MapContainer({
   const elements = circles.map((data) => {
     return (
       <div
-        key={data.loc}
+        key={data._id.toString() + data.loc}
         onMouseEnter={() => setHoverLoc(data.loc)}
         onMouseLeave={() => setHoverLoc(null)}
       >
@@ -59,7 +60,7 @@ export default function MapContainer({
           tags={data.tags}
           hovering={loc?.loc === data.loc}
           selected={selectedLoc === data.loc}
-          favorite={favoriteCircles.includes(data._id)}
+          personalData={personalData}
           setSelectedLoc={setSelectedLoc}
           fireForceLocationEvent={fireForceLocationEvent}
           fireForceSilderPercentageSetEvent={fireForceSilderPercentageSetEvent}

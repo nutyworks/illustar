@@ -7,15 +7,25 @@
   --circle-favorite-hovering-color: 255, 115, 170;
   --circle-favorite-color: 255, 41, 126;
   --circle-hovering-color: 255, 255, 255, 50%;
-  --circle-selected-color: 183, 79, 247;
+  --circle-selected-shadow-color: 127, 127, 127, 60%;
+
+  --flag1-color: 241, 147, 3;
+  --flag2-color: 254, 234, 18;
+  --flag3-color: 61, 170, 50;
+  --flag4-color: 31, 114, 185;
+  --flag5-color: 104, 35, 132;
+  --flag6-color: 163, 26, 93;
+
   --tooltip-background-color: 50, 50, 50;
   --tooltip-color: 255, 255, 255;
+
   --foreground-rgb: 0, 0, 0;
   --background-rgb: 255, 255, 255;
   --selected-background-rgb: 234, 234, 234;
   --border-color: 127, 127, 127;
   --silder-handle-color: 127, 127, 127;
   --shadow-color: 127, 127, 127, 25%;
+
   --saturday-color: 80, 150, 242;
   --sunday-color: 245, 73, 119;
 }

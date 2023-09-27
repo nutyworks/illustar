@@ -3,9 +3,10 @@
 import { Dispatch, SetStateAction } from "react";
 import { ForceSilderPercentageSetEvent } from "../info_silder/info_silder_frame";
 import { ForceLocationEvent } from "./map_frame";
+import { CircleData, PersonalData } from "@/app/data/personal_circle_data";
 
 export interface CircleOptions {
-  _id: number;
+  _id: string;
   xPos: number;
   yPos: number;
   width: number;
@@ -19,7 +20,7 @@ export interface CircleOptions {
 }
 
 interface CircleDisplayOptions {
-  _id: number;
+  _id: string;
   xPos: number;
   yPos: number;
   width: number;
@@ -32,7 +33,7 @@ interface CircleDisplayOptions {
   tags: string | undefined;
   hovering: boolean;
   selected: boolean;
-  favorite: boolean;
+  personalData: PersonalData;
   setSelectedLoc: Dispatch<SetStateAction<string | null>>;
   fireForceLocationEvent: Dispatch<SetStateAction<ForceLocationEvent>>;
   fireForceSilderPercentageSetEvent: Dispatch<
@@ -41,6 +42,11 @@ interface CircleDisplayOptions {
 }
 
 export default function CircleDisplay(opts: CircleDisplayOptions) {
+  const data: CircleData | undefined =
+    opts.personalData.circleDataList[opts._id];
+  const favorite = data?.favorite ?? false;
+  const flag = data?.flag ?? 0;
+
   return (
     <button
       style={{
@@ -48,15 +54,18 @@ export default function CircleDisplay(opts: CircleDisplayOptions) {
         top: opts.yPos,
         left: opts.xPos,
         backgroundColor:
-          (opts.selected && "rgb(var(--circle-selected-color))") ||
-          (opts.favorite &&
+          (flag > 0 && `rgb(var(--flag${flag}-color)`) ||
+          (favorite &&
             opts.hovering &&
-            "rgb(var(--circle-favorite-color))") ||
-          (opts.favorite && "rgb(var(--circle-favorite-color))") ||
+            "rgb(var(--circle-favorite-hovering-color))") ||
+          (favorite && "rgb(var(--circle-favorite-color))") ||
           (opts.hovering && "rgba(var(--circle-hovering-color))") ||
           "transparent",
         width: opts.width,
         height: opts.height,
+        boxShadow: opts.selected
+          ? "0 0px 15px 10px rgba(var(--circle-selected-shadow-color))"
+          : "none",
       }}
       onClick={(e) => {
         opts.setSelectedLoc(opts.loc);

@@ -4,11 +4,12 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { CircleOptions } from "../map/circle_display";
 import InfoSilderContainer from "./info_slider_container";
 import useWindowDimensions from "@/app/utils/get_window_dimensions";
+import { PersonalData } from "@/app/data/personal_circle_data";
 
 interface InfoSilderFrameOptions {
   circle: CircleOptions | undefined;
-  favoriteCircles: number[];
-  setFavoriteCircles: Dispatch<SetStateAction<number[]>>;
+  personalData: PersonalData;
+  setPersonalData: Dispatch<SetStateAction<PersonalData>>;
   forceSilderPercentageSetEvent: ForceSilderPercentageSetEvent;
   silderPercentage: number;
   setSilderPercentage: Dispatch<SetStateAction<number>>;
@@ -26,8 +27,8 @@ export class ForceSilderPercentageSetEvent {
 
 export default function InfoSilderFrame({
   circle,
-  favoriteCircles,
-  setFavoriteCircles,
+  personalData,
+  setPersonalData,
   forceSilderPercentageSetEvent,
   silderPercentage,
   setSilderPercentage,
@@ -134,8 +135,8 @@ export default function InfoSilderFrame({
       ></p>
       <InfoSilderContainer
         circle={circle}
-        favoriteCircles={favoriteCircles}
-        setFavoriteCircles={setFavoriteCircles}
+        personalData={personalData}
+        setPersonalData={setPersonalData}
       />
     </div>
   );
@@ -152,8 +153,8 @@ export default function InfoSilderFrame({
     >
       <InfoSilderContainer
         circle={circle}
-        favoriteCircles={favoriteCircles}
-        setFavoriteCircles={setFavoriteCircles}
+        personalData={personalData}
+        setPersonalData={setPersonalData}
       />
     </div>
   );

@@ -3,6 +3,7 @@ import MapContainer from "./map_container";
 import { CircleOptions } from "./circle_display";
 import useWindowDimensions from "@/app/utils/get_window_dimensions";
 import { ForceSilderPercentageSetEvent } from "../info_silder/info_silder_frame";
+import { PersonalData } from "@/app/data/personal_circle_data";
 
 export class ForceLocationEvent {
   value: string;
@@ -16,7 +17,7 @@ export class ForceLocationEvent {
 interface MapFrameOptions {
   day: number;
   circles: CircleOptions[];
-  favoriteCircles: number[];
+  personalData: PersonalData;
   selectedLoc: string | null;
   setSelectedLoc: Dispatch<SetStateAction<string | null>>;
   forceLocationEvent: ForceLocationEvent;
@@ -37,7 +38,7 @@ interface TouchData {
 export default function MapFrame({
   day,
   circles,
-  favoriteCircles,
+  personalData,
   selectedLoc,
   setSelectedLoc,
   forceLocationEvent,
@@ -356,7 +357,7 @@ export default function MapFrame({
         scaledPosition={scaledPosition}
         ratio={zoomRatio}
         circles={circles}
-        favoriteCircles={favoriteCircles}
+        personalData={personalData}
         transformOrigin={transformOrigin}
         selectedLoc={selectedLoc}
         setSelectedLoc={setSelectedLoc}

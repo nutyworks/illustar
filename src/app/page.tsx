@@ -10,6 +10,12 @@ import { CircleOptions } from "./components/map/circle_display";
 import SearchResultContainer from "./components/search/search_result_container";
 import { ForceSilderPercentageSetEvent } from "./components/info_silder/info_silder_frame";
 import { getCookie, setCookie } from "./utils/cookie";
+import {
+  PersonalData,
+  createPersonalCircleDataFromCookieStr_migrate1,
+  generatePersonalDataFromObject,
+} from "./data/personal_circle_data";
+
 const InfoSilderFrame = dynamic(
   () => import("./components/info_silder/info_silder_frame"),
   {
@@ -35,17 +41,34 @@ export default function App() {
   const [forceSilderPercentageSetEvent, fireForceSilderPercentageSetEvent] =
     useState(new ForceSilderPercentageSetEvent(1));
 
-  console.log(getCookie("favorites"));
-  const [favoriteCircles, setFavoriteCircles] = useState<number[]>(
-    ((getCookie("favorites") as string) ?? "")
-      .split(";")
-      .map((x) => Number.parseInt(x))
-      .filter((x) => x)
+  useMemo(() => {
+    const oldFavorite = (getCookie("favorites", true) as string) ?? "";
+    console.log(
+      typeof getCookie("favorites"),
+      getCookie("favorites") as string
+    );
+    console.log("oldfav", oldFavorite);
+
+    if (oldFavorite.length > 0) {
+      console.log(oldFavorite);
+      const data = createPersonalCircleDataFromCookieStr_migrate1(oldFavorite);
+      console.log(data);
+      setCookie("favorites", "");
+      setCookie("personalData", data);
+    } else if (
+      ((getCookie("personalData", true) as string) ?? "").length == 0
+    ) {
+      setCookie("personalData", new PersonalData([]));
+    }
+  }, []);
+
+  const [personalData, setPersonalData] = useState<PersonalData>(
+    generatePersonalDataFromObject(getCookie("personalData"))
   );
 
   useMemo(() => {
-    setCookie("favorites", favoriteCircles.map((x) => x.toString()).join(";"));
-  }, [favoriteCircles]);
+    setCookie("personalData", personalData);
+  }, [personalData]);
 
   const dayCircleData = circleData.filter((circle) =>
     circle.days.includes(day)
@@ -136,8 +159,8 @@ export default function App() {
     >
       <InfoSilderFrame
         circle={dayCircleData.find((circle) => circle.loc === selectedLoc)}
-        favoriteCircles={favoriteCircles}
-        setFavoriteCircles={setFavoriteCircles}
+        personalData={personalData}
+        setPersonalData={setPersonalData}
         forceSilderPercentageSetEvent={forceSilderPercentageSetEvent}
         silderPercentage={silderPercentage}
         setSilderPercentage={setSilderPercentage}
@@ -172,7 +195,7 @@ export default function App() {
         <MapFrame
           day={day}
           circles={dayCircleData}
-          favoriteCircles={favoriteCircles}
+          personalData={personalData}
           selectedLoc={selectedLoc}
           setSelectedLoc={setSelectedLoc}
           forceLocationEvent={forceLocationEvent}
