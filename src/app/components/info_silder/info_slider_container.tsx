@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { CircleOptions } from "../map/circle_display";
 import { CircleData, PersonalData } from "@/app/data/personal_circle_data";
 
@@ -13,6 +13,10 @@ export default function InfoSilderContainer({
   personalData,
   setPersonalData,
 }: InfoSilderOptions) {
+  const [isEditing, setEditing] = useState(false);
+  const [editComponent, setEditComponent] = useState(<></>);
+  const [newNotes, setNewNotes] = useState("");
+
   if (circle === undefined) {
     return (
       <div
@@ -32,6 +36,7 @@ export default function InfoSilderContainer({
   const data: CircleData | undefined = personalData.circleDataList[circle._id];
   const isFavorite = data?.favorite ?? false;
   const flag = data?.flag ?? 0;
+  const notes = data?.notes ?? "";
 
   const heartFilled = (
     <svg
@@ -79,6 +84,12 @@ export default function InfoSilderContainer({
   const handleFlag = () => {
     setPersonalData(personalData.setCircleFlag(circle._id, (flag + 1) % 6));
   };
+  const handleEdit = () => {
+    console.log(newNotes);
+    setEditing(false);
+    setPersonalData(personalData.setCircleNotes(circle._id, newNotes));
+  };
+
   return (
     <div
       style={{
@@ -86,6 +97,7 @@ export default function InfoSilderContainer({
         width: "100%",
         paddingLeft: "1em",
         paddingRight: "1em",
+        overflow: "hidden",
       }}
     >
       {circle.loc} · <DayMarker days={circle.days} />
@@ -117,6 +129,90 @@ export default function InfoSilderContainer({
           </li>
         ))}
       </ul>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignContent: "baseline",
+        }}
+      >
+        <h2>메모</h2>
+        <span
+          className="fake-a"
+          style={{
+            marginTop: "0.75em",
+            marginLeft: "0.5em",
+          }}
+          onClick={() => {
+            setEditing(true);
+            setEditComponent(
+              <>
+                <textarea
+                  placeholder="메모를 입력하세요"
+                  style={{
+                    border: "1px solid rgb(var(--border-color))",
+                    borderRadius: "0.5em",
+                    padding: "0.5em",
+                    width: "100%",
+                    height: "10em",
+                    minHeight: "2.5em",
+                  }}
+                  onInput={(e) => {
+                    setNewNotes((e.target as HTMLInputElement).value);
+                  }}
+                  defaultValue={notes}
+                />
+              </>
+            );
+          }}
+        >
+          {!isEditing && (notes.length > 0 ? "수정하기" : "추가하기")}
+        </span>
+      </div>
+      {isEditing ? (
+        editComponent
+      ) : (
+        <pre className="normal-font">
+          {notes.length > 0 ? (
+            notes
+          ) : (
+            <span style={{ color: "gray" }}>메모 없음</span>
+          )}
+        </pre>
+      )}
+      {isEditing && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row-reverse",
+            gap: "0.5em",
+          }}
+        >
+          <button
+            style={{
+              border: "1px solid rgb(var(--border-color))",
+              borderRadius: "0.5em",
+              width: "5em",
+              padding: "0.5em",
+              backgroundColor: "cornflowerblue",
+              color: "white",
+            }}
+            onClick={handleEdit}
+          >
+            수정
+          </button>
+          <button
+            style={{
+              border: "1px solid rgb(var(--border-color))",
+              borderRadius: "0.5em",
+              padding: "0.5em",
+            }}
+            onClick={() => setEditing(false)}
+          >
+            취소
+          </button>
+        </div>
+      )}
     </div>
   );
 }

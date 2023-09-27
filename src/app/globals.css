@@ -14,7 +14,6 @@
   --flag3-color: 61, 170, 50;
   --flag4-color: 31, 114, 185;
   --flag5-color: 104, 35, 132;
-  --flag6-color: 163, 26, 93;
 
   --tooltip-background-color: 50, 50, 50;
   --tooltip-color: 255, 255, 255;
@@ -115,6 +114,7 @@ h1 {
 }
 
 h2 {
+  margin-top: 0.5em;
   font-size: 1.25em;
   font-weight: 500;
 }
@@ -123,4 +123,15 @@ a {
   color: cornflowerblue;
   font-weight: 700;
   text-decoration: underline;
+}
+
+.fake-a {
+  color: cornflowerblue;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.normal-font {
+  font-family: calibri, arial, sans-serif;
 }

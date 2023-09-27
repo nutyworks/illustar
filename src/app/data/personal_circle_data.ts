@@ -47,6 +47,21 @@ export class PersonalData {
 
     return new PersonalData(Object.values(this.circleDataList));
   }
+
+  setCircleNotes(_id: string, notes: string): PersonalData {
+    if (_id in this.circleDataList) {
+      this.circleDataList[_id].notes = notes;
+    } else {
+      this.circleDataList[_id] = {
+        _id: _id,
+        favorite: false,
+        flag: 0,
+        notes: notes
+      };
+    }
+
+    return new PersonalData(Object.values(this.circleDataList));
+  }
 }
 
 export function createPersonalCircleDataFromCookieStr_migrate1(cookieStr: string): PersonalData {
