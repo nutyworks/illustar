@@ -52,7 +52,6 @@ export class PersonalData {
 export function createPersonalCircleDataFromCookieStr_migrate1(cookieStr: string): PersonalData {
   const circleDataaList = cookieStr.split(";")
     .map((x) => { 
-      console.log(x);
       return {_id: x, favorite: true, flag: 0, notes: ""} as CircleData;
     })
 

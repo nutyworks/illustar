@@ -114,7 +114,6 @@ export default function MapFrame({
   }
 
   const wheelHandler = (e: React.WheelEvent) => {
-    console.log(e);
     const newTransformOrigin = {
       x: e.clientX,
       y: e.clientY,

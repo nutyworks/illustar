@@ -43,16 +43,9 @@ export default function App() {
 
   useMemo(() => {
     const oldFavorite = (getCookie("favorites", true) as string) ?? "";
-    console.log(
-      typeof getCookie("favorites"),
-      getCookie("favorites") as string
-    );
-    console.log("oldfav", oldFavorite);
 
     if (oldFavorite.length > 0) {
-      console.log(oldFavorite);
       const data = createPersonalCircleDataFromCookieStr_migrate1(oldFavorite);
-      console.log(data);
       setCookie("favorites", "");
       setCookie("personalData", data);
     } else if (

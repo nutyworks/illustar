@@ -20,7 +20,6 @@ export default function SearchBar({
   const inputHandler = (e: React.FormEvent) => {
     const target = e.target as HTMLInputElement;
     const ie = e.nativeEvent as InputEvent;
-    console.log(target.value, ie);
     setSearchText(target.value);
     performSearch(target.value);
   };
