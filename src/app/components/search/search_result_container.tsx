@@ -114,7 +114,8 @@ function SearchResultCircle({
       {name}
       <p>
         <small>
-          {loc} {dayType} {repr.map((r) => r.name).join(", ")}
+          {loc.join(", ")}
+          {repr.length > 0 ? " | " + repr.map((r) => r.name).join(", ") : ""}
         </small>
       </p>
       <p>
