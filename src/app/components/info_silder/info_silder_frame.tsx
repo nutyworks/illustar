@@ -56,7 +56,7 @@ export default function InfoSilderFrame({
     if (!isDragging) return;
     const newPercentage =
       silderPercentage + (e.clientY - touchY) / (height - 100);
-    setSilderPercentage(Math.max(0, Math.min(newPercentage, 1)));
+    setSilderPercentage(Math.max(-9, Math.min(newPercentage, 1)));
     setTouchY(e.clientY);
     e.stopPropagation();
   };
@@ -71,7 +71,7 @@ export default function InfoSilderFrame({
     else if (diff3 < diff1 && diff3 < diff2) newPercentage = 1;
     else newPercentage = 0.5;
 
-    setSilderPercentageForce(newPercentage);
+    if (silderPercentage >= 0) setSilderPercentageForce(newPercentage);
     setDragging(false);
     e.stopPropagation();
   };
@@ -84,7 +84,7 @@ export default function InfoSilderFrame({
     if (e.touches.length >= 2) return;
     const newPercentage =
       silderPercentage + (e.touches[0].clientY - touchY) / (height - 100);
-    setSilderPercentage(Math.max(0, Math.min(newPercentage, 1)));
+    setSilderPercentage(Math.max(-9, Math.min(newPercentage, 1)));
     setTouchY(e.touches[0].clientY);
     e.stopPropagation();
   };
@@ -99,7 +99,8 @@ export default function InfoSilderFrame({
     else if (diff3 < diff1 && diff3 < diff2) newPercentage = 1;
     else newPercentage = 0.5;
 
-    setSilderPercentageForce(newPercentage);
+    if (silderPercentage >= 0) setSilderPercentageForce(newPercentage);
+    setDragging(false);
     e.stopPropagation();
   };
 
@@ -166,7 +167,7 @@ export default function InfoSilderFrame({
       style={{
         display: "block",
         width: "100%",
-        height: "100%",
+        height: "1000%",
         transform: `translate(0, ${
           isSidebar ? 0 : silderPercentage * (height - 100)
         }px)`,
