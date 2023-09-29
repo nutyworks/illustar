@@ -328,6 +328,15 @@ export default function InfoSilderContainer({
           </button>
         </div>
       )}
+      <a
+        href="https://forms.gle/9V8vQ21ZTDLq9etT6"
+        target="_blank"
+        style={{ color: "rgb(var(--foreground-description-rgb))" }}
+      >
+        <br />
+        <br />
+        최신 정보가 아닌가요? 여기를 클릭해서 알려주세요.
+      </a>
     </div>
   );
 }
