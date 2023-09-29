@@ -99,33 +99,35 @@ export default function MapContainer({
         <div
           style={{
             position: "absolute",
-            top: 1417,
+            top: 1217,
             left: -400,
             fontSize: "8em",
             width: "1000%",
           }}
         >
-          <div>이 웹페이지는 Chrome에 최적화되어 있습니다.</div>
-          <div>코딩한 사람: 레몬</div>
-          <div>
-            데이터 넣은 사람: 레몬,{" "}
-            <a
-              href="https://github.com/kevin5871"
-              target="blank"
-              style={{
-                fontWeight: 400,
-                color: "black",
-                textDecoration: "none",
-              }}
-            >
-              sfcatz
-            </a>
-            , Sunghoon, Trestle
-          </div>
-          <div>
-            <a href="https://forms.gle/5NNg4L6X6JrjHtBb7" target="blank">
-              피드백 제출하기
-            </a>
+          <div style={{ fontSize: "0.1em" }}>
+            <div>이 웹페이지는 Chrome에 최적화되어 있습니다.</div>
+            <div>Developer: lemonajoc</div>
+            <div>
+              Contributer: lemonajoc,{" "}
+              <a
+                href="https://github.com/kevin5871"
+                target="blank"
+                style={{
+                  fontWeight: 400,
+                  color: "black",
+                  textDecoration: "none",
+                }}
+              >
+                sfcatz
+              </a>
+              , Sunghoon, Trestle
+            </div>
+            <div>
+              <a href="https://forms.gle/5NNg4L6X6JrjHtBb7" target="blank">
+                피드백 제출하기
+              </a>
+            </div>
           </div>
         </div>
       </div>
