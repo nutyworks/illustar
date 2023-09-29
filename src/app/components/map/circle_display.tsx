@@ -52,9 +52,8 @@ export default function CircleDisplay(opts: CircleDisplayOptions) {
           "rgb(var(--circle-default-color))",
         width: opts.pos.w,
         height: opts.pos.h,
-        boxShadow: opts.selected
-          ? "0 0px 15px 10px rgba(var(--circle-selected-shadow-color))"
-          : "none",
+        boxShadow: opts.selected ? "0 0px 25px 20px #fff" : "none",
+        zIndex: opts.selected ? 10 : 0,
         filter: opts.hovering ? "brightness(150%)" : "",
       }}
       onClick={(e) => {
