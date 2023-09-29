@@ -28,7 +28,7 @@ const MapFrame = dynamic(() => import("./components/map/map_frame"), {
 
 export default function App() {
   const [day, setDay] = useState(0);
-  const [selectedLoc, setSelectedLoc] = useState<string | null>(null);
+  const [selectedCircleId, setSelectedCircleId] = useState<string | null>(null);
   const [searchText, setSearchText] = useState<string>("");
   const [isSearching, setSearching] = useState<boolean>(false);
   const [searchResult, setSearchResult] = useState<CircleOptions[] | null>(
@@ -77,9 +77,16 @@ export default function App() {
     let res = circleData;
     queries.forEach((q) => {
       if (q.startsWith("#") && q.length > 1)
-        res = res.filter((c) => c.tags?.includes(q));
+        res = res.filter(
+          (c) =>
+            c.genre_tags?.includes(q) ||
+            c.character_tags?.includes(q) ||
+            c.type_tags?.includes(q)
+        );
       else if (q.startsWith("@") && q.length > 1)
-        res = res.filter((c) => c.repr?.includes(q.slice(1)));
+        res = res.filter((c) =>
+          c.repr?.flatMap((x) => x.name).includes(q.slice(1))
+        );
       else if (q === "*토")
         res = res.filter((c) => c.days.includes(0) && !c.days.includes(1));
       else if (q === "*일")
@@ -119,10 +126,10 @@ export default function App() {
       >
         <SearchResultContainer
           result={searchResult}
-          setSelectedLoc={setSelectedLoc}
+          setSelectedLoc={setSelectedCircleId}
           setDay={setDay}
           setSearching={setSearching}
-          fireForceLocationEvent={fireForceLocationEvent}
+          fireForceCircleIdSetEvent={fireForceLocationEvent}
           fireForceSilderPercentageSetEvent={fireForceSilderPercentageSetEvent}
         />
       </div>
@@ -151,7 +158,7 @@ export default function App() {
       onClick={(e) => e.stopPropagation()}
     >
       <InfoSilderFrame
-        circle={dayCircleData.find((circle) => circle.loc === selectedLoc)}
+        circle={dayCircleData.find((circle) => circle._id === selectedCircleId)}
         personalData={personalData}
         setPersonalData={setPersonalData}
         forceSilderPercentageSetEvent={forceSilderPercentageSetEvent}
@@ -189,11 +196,11 @@ export default function App() {
           day={day}
           circles={dayCircleData}
           personalData={personalData}
-          selectedLoc={selectedLoc}
-          setSelectedLoc={setSelectedLoc}
+          selectedCircleId={selectedCircleId}
+          setSelectedCircleId={setSelectedCircleId}
           forceLocationEvent={forceLocationEvent}
           setSilderPercentage={setSilderPercentage}
-          fireForceLocationEvent={fireForceLocationEvent}
+          fireForceCircleSetEvent={fireForceLocationEvent}
           fireForceSilderPercentageSetEvent={fireForceSilderPercentageSetEvent}
         />
       </div>

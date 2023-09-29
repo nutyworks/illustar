@@ -1,19 +1,25 @@
 import { CircleOptions } from "./circle_display";
 
 export interface TooltipOptions {
-  location: CircleOptions;
+  circle: CircleOptions;
   scaledPosition: { x: number; y: number };
   zoomRatio: number;
 }
 
 export default function Tooltip({
-  location,
+  circle,
   scaledPosition,
   zoomRatio,
 }: TooltipOptions) {
+  const xMin = Math.min(...circle.pos.map((p) => p.x)); // circle.xpos
+  const xMax = Math.max(...circle.pos.map((p) => p.x + p.w));
+  const width = xMax - xMin;
+  const yMin = Math.min(...circle.pos.map((p) => p.y)); // circle.ypos
+  const yMax = Math.max(...circle.pos.map((p) => p.y + p.h));
+  const height = yMax - yMin;
   let position = {
-    x: (location.xPos + location.width / 2) * zoomRatio + scaledPosition.x,
-    y: location.yPos * zoomRatio + scaledPosition.y,
+    x: (xMin + width / 2) * zoomRatio + scaledPosition.x,
+    y: yMin * zoomRatio + scaledPosition.y,
   };
   let top = "",
     left = "",
@@ -23,16 +29,16 @@ export default function Tooltip({
     left = "50%";
     transform = "translate(-50%, -100%) translateY(-10px)";
     position = {
-      x: (location.xPos + location.width / 2) * zoomRatio + scaledPosition.x,
-      y: location.yPos * zoomRatio + scaledPosition.y,
+      x: (xMin + width / 2) * zoomRatio + scaledPosition.x,
+      y: yMin * zoomRatio + scaledPosition.y,
     };
   } else {
     top = "50%";
     left = "50%";
     transform = "translate(-50%, 0%) translateY(10px)";
     position = {
-      x: (location.xPos + location.width / 2) * zoomRatio + scaledPosition.x,
-      y: (location.yPos + location.height) * zoomRatio + scaledPosition.y,
+      x: (xMin + width / 2) * zoomRatio + scaledPosition.x,
+      y: (yMin + height) * zoomRatio + scaledPosition.y,
     };
   }
   return (
@@ -58,9 +64,11 @@ export default function Tooltip({
         }}
       >
         <center>
-          <p style={{ width: "max-content" }}> {location.loc} </p>
-          <p style={{ width: "max-content" }}>{location.name}</p>
-          <p style={{ width: "max-content" }}>{location.repr}</p>
+          <p style={{ width: "max-content" }}> {circle.loc.join(", ")} </p>
+          <p style={{ width: "max-content" }}>{circle.name}</p>
+          <p style={{ width: "max-content" }}>
+            {circle.repr.map((r) => r.name).join(", ")}
+          </p>
         </center>
       </div>
     </div>

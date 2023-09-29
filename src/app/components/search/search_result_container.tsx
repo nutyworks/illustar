@@ -8,7 +8,7 @@ interface SearchResultOptions {
   setSelectedLoc: Dispatch<SetStateAction<string | null>>;
   setDay: Dispatch<SetStateAction<number>>;
   setSearching: Dispatch<SetStateAction<boolean>>;
-  fireForceLocationEvent: Dispatch<SetStateAction<ForceLocationEvent>>;
+  fireForceCircleIdSetEvent: Dispatch<SetStateAction<ForceLocationEvent>>;
   fireForceSilderPercentageSetEvent: Dispatch<
     SetStateAction<ForceSilderPercentageSetEvent>
   >;
@@ -16,10 +16,10 @@ interface SearchResultOptions {
 
 export default function SearchResultContainer({
   result,
-  setSelectedLoc,
+  setSelectedLoc: setSelectedCircleId,
   setDay,
   setSearching,
-  fireForceLocationEvent,
+  fireForceCircleIdSetEvent,
   fireForceSilderPercentageSetEvent,
 }: SearchResultOptions) {
   const resultFound = result?.length ?? 1 > 0;
@@ -28,11 +28,11 @@ export default function SearchResultContainer({
       <div
         key={circle.loc + circle.name}
         onClick={() => {
-          setSelectedLoc(circle.loc);
+          setSelectedCircleId(circle._id);
           setDay(circle.days[0]);
           setSearching(false);
           window.history.go(-1);
-          fireForceLocationEvent(new ForceLocationEvent(circle.loc));
+          fireForceCircleIdSetEvent(new ForceLocationEvent(circle._id));
           fireForceSilderPercentageSetEvent(
             new ForceSilderPercentageSetEvent(0.5)
           );
@@ -84,7 +84,13 @@ export default function SearchResultContainer({
   return <div>{resultFound ? results ?? searchHelp : empty}</div>;
 }
 
-function SearchResultCircle({ loc, name, repr, days, tags }: CircleOptions) {
+function SearchResultCircle({
+  loc,
+  name,
+  repr,
+  days,
+  genre_tags,
+}: CircleOptions) {
   const dayType =
     days.includes(0) && days.includes(1)
       ? "양일"
@@ -108,11 +114,11 @@ function SearchResultCircle({ loc, name, repr, days, tags }: CircleOptions) {
       {name}
       <p>
         <small>
-          {loc} {dayType} {repr}
+          {loc} {dayType} {repr.map((r) => r.name).join(", ")}
         </small>
       </p>
       <p>
-        <small>{tags}</small>
+        <small>{genre_tags}</small>
       </p>
     </div>
   );

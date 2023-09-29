@@ -100,7 +100,7 @@ export default function InfoSilderContainer({
         overflow: "hidden",
       }}
     >
-      {circle.loc} · <DayMarker days={circle.days} />
+      {circle.loc.join(", ")} · <DayMarker days={circle.days} />
       <div
         style={{
           marginTop: "2em",
@@ -118,17 +118,132 @@ export default function InfoSilderContainer({
         </p>
       </div>
       <h1>{circle.name}</h1>
-      <p>{circle.repr}</p>
-      <p>{circle.tags}</p>
-      <ul>
-        {circle.urls.map((url, idx) => (
-          <li key={idx}>
-            <a href={url} target="blank">
-              Link #{idx + 1}: {url.split("/")[2]}
-            </a>
-          </li>
-        ))}
-      </ul>
+      <h2>서클 정보</h2>
+      <table>
+        <th style={{ minWidth: "3.5em" }}></th>
+        <th></th>
+        <tr>
+          <td>참가자</td>
+          <td>
+            {circle.repr.length > 0 ? (
+              circle.repr.map((info) => (
+                <p key={info.link}>
+                  <a key={info.link} target="_blank" href={info.link}>
+                    {info.name}
+                  </a>
+                </p>
+              ))
+            ) : (
+              <span style={{ color: "rgb(var(--foreground-description-rgb))" }}>
+                정보 없음
+              </span>
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>인포</td>
+          <td>
+            {circle.info_links.length > 0 ? (
+              circle.info_links.map((info) => (
+                <p key={info.link}>
+                  <a key={info.link} target="_blank" href={info.link}>
+                    {info.name}
+                  </a>
+                </p>
+              ))
+            ) : (
+              <span style={{ color: "rgb(var(--foreground-description-rgb))" }}>
+                정보 없음
+              </span>
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>선입금</td>
+          <td>
+            {circle.preorder_links.length > 0 ? (
+              circle.preorder_links.map((info) => (
+                <p key={info.link}>
+                  <a key={info.link} target="_blank" href={info.link}>
+                    {info.name}
+                  </a>
+                </p>
+              ))
+            ) : (
+              <span style={{ color: "rgb(var(--foreground-description-rgb))" }}>
+                정보 없음
+              </span>
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>통판</td>
+          <td>
+            {circle.netorder_links.length > 0 ? (
+              circle.netorder_links.map((info) => (
+                <p key={info.link}>
+                  <a key={info.link} target="_blank" href={info.link}>
+                    {info.name}
+                  </a>
+                </p>
+              ))
+            ) : (
+              <span style={{ color: "rgb(var(--foreground-description-rgb))" }}>
+                정보 없음
+              </span>
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>기타</td>
+          <td>
+            {circle.etc_links.length > 0 ? (
+              circle.etc_links.map((info) => (
+                <p key={info.link}>
+                  <a key={info.link} target="_blank" href={info.link}>
+                    {info.name}
+                  </a>
+                </p>
+              ))
+            ) : (
+              <span style={{ color: "rgb(var(--foreground-description-rgb))" }}>
+                정보 없음
+              </span>
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>장르</td>
+          <td>
+            {circle.genre_tags ?? (
+              <span style={{ color: "rgb(var(--foreground-description-rgb))" }}>
+                정보 없음
+              </span>
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>캐릭터</td>
+          <td>
+            {circle.character_tags ?? (
+              <span style={{ color: "rgb(var(--foreground-description-rgb))" }}>
+                정보 없음
+              </span>
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>굿즈</td>
+          <td>
+            {circle.type_tags ?? (
+              <span style={{ color: "rgb(var(--foreground-description-rgb))" }}>
+                정보 없음
+              </span>
+            )}
+          </td>
+        </tr>
+      </table>
+      <p></p>
       <div
         style={{
           display: "flex",

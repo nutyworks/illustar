@@ -3,10 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --circle-color: 50, 50, 50;
+  --circle-default-color: 87, 87, 87;
   --circle-favorite-hovering-color: 255, 115, 170;
   --circle-favorite-color: 255, 41, 126;
-  --circle-hovering-color: 255, 255, 255, 50%;
   --circle-selected-shadow-color: 127, 127, 127, 60%;
 
   --flag1-color: 241, 147, 3;
@@ -19,6 +18,7 @@
   --tooltip-color: 255, 255, 255;
 
   --foreground-rgb: 0, 0, 0;
+  --foreground-description-rgb: 100, 100, 100;
   --background-rgb: 255, 255, 255;
   --selected-background-rgb: 234, 234, 234;
   --border-color: 127, 127, 127;
@@ -31,8 +31,7 @@
 
 * {
   margin: 0;
-  padding: 0;
-}
+  padding: 0; }
 
 *:focus {
   -webkit-tap-highlight-color: transparent;
@@ -134,4 +133,10 @@ a {
 
 .normal-font {
   font-family: calibri, arial, sans-serif;
+}
+
+td {
+  padding-right: 0.5em;
+  padding-top: 0.5em;
+  vertical-align: top;
 }

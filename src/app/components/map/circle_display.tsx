@@ -2,40 +2,33 @@
 
 import { Dispatch, SetStateAction } from "react";
 import { ForceSilderPercentageSetEvent } from "../info_silder/info_silder_frame";
-import { ForceLocationEvent } from "./map_frame";
+import { ForceLocationEvent as ForceCircleSetEvent } from "./map_frame";
 import { CircleData, PersonalData } from "@/app/data/personal_circle_data";
 
 export interface CircleOptions {
   _id: string;
-  xPos: number;
-  yPos: number;
-  width: number;
-  height: number;
-  loc: string;
+  pos: { x: number; y: number; w: number; h: number }[];
+  loc: string[];
   name: string;
-  repr: string | undefined;
-  urls: string[];
+  repr: { name: string; link: string }[];
+  info_links: { name: string; link: string }[];
+  preorder_links: { name: string; link: string }[];
+  netorder_links: { name: string; link: string }[];
+  etc_links: { name: string; link: string }[];
   days: number[];
-  tags: string | undefined;
+  genre_tags: string | undefined;
+  character_tags: string | undefined;
+  type_tags: string | undefined;
 }
 
 interface CircleDisplayOptions {
   _id: string;
-  xPos: number;
-  yPos: number;
-  width: number;
-  height: number;
-  loc: string;
-  name: string;
-  repr: string | undefined;
-  urls: string[];
-  days: number[];
-  tags: string | undefined;
+  pos: { x: number; y: number; w: number; h: number };
   hovering: boolean;
   selected: boolean;
   personalData: PersonalData;
-  setSelectedLoc: Dispatch<SetStateAction<string | null>>;
-  fireForceLocationEvent: Dispatch<SetStateAction<ForceLocationEvent>>;
+  setSelectedCircleId: Dispatch<SetStateAction<string | null>>;
+  fireForceCircleSetEvent: Dispatch<SetStateAction<ForceCircleSetEvent>>;
   fireForceSilderPercentageSetEvent: Dispatch<
     SetStateAction<ForceSilderPercentageSetEvent>
   >;
@@ -51,25 +44,22 @@ export default function CircleDisplay(opts: CircleDisplayOptions) {
     <button
       style={{
         position: "absolute",
-        top: opts.yPos,
-        left: opts.xPos,
+        top: opts.pos.y,
+        left: opts.pos.x,
         backgroundColor:
           (flag > 0 && `rgb(var(--flag${flag}-color)`) ||
-          (favorite &&
-            opts.hovering &&
-            "rgb(var(--circle-favorite-hovering-color))") ||
           (favorite && "rgb(var(--circle-favorite-color))") ||
-          (opts.hovering && "rgba(var(--circle-hovering-color))") ||
-          "transparent",
-        width: opts.width,
-        height: opts.height,
+          "rgb(var(--circle-default-color))",
+        width: opts.pos.w,
+        height: opts.pos.h,
         boxShadow: opts.selected
           ? "0 0px 15px 10px rgba(var(--circle-selected-shadow-color))"
           : "none",
+        filter: opts.hovering ? "brightness(150%)" : "",
       }}
       onClick={(e) => {
-        opts.setSelectedLoc(opts.loc);
-        opts.fireForceLocationEvent(new ForceLocationEvent(opts.loc));
+        opts.setSelectedCircleId(opts._id);
+        opts.fireForceCircleSetEvent(new ForceCircleSetEvent(opts._id));
         opts.fireForceSilderPercentageSetEvent(
           new ForceSilderPercentageSetEvent(0.5)
         );

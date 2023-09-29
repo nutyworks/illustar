@@ -15,9 +15,9 @@ interface MapOptions {
   position: { x: number; y: number };
   scaledPosition: { x: number; y: number };
   transformOrigin: { x: number; y: number };
-  selectedLoc: string | null;
-  setSelectedLoc: Dispatch<SetStateAction<string | null>>;
-  fireForceLocationEvent: Dispatch<SetStateAction<ForceLocationEvent>>;
+  selectedCircleId: string | null;
+  setSelectedCircleId: Dispatch<SetStateAction<string | null>>;
+  fireForceCircleSetEvent: Dispatch<SetStateAction<ForceLocationEvent>>;
   fireForceSilderPercentageSetEvent: Dispatch<
     SetStateAction<ForceSilderPercentageSetEvent>
   >;
@@ -29,40 +29,38 @@ export default function MapContainer({
   personalData,
   position,
   scaledPosition,
-  ratio: zoomRatio,
+  ratio,
   transformOrigin,
-  selectedLoc,
-  setSelectedLoc,
-  fireForceLocationEvent,
+  selectedCircleId,
+  setSelectedCircleId,
+  fireForceCircleSetEvent,
   fireForceSilderPercentageSetEvent,
 }: MapOptions) {
-  const [hoverLoc, setHoverLoc] = useState<string | null>(null);
-  const loc = circles.find((d) => d.loc === hoverLoc);
+  const [hoverCircleId, setHoverCircleId] = useState<string | null>(null);
+  const loc = circles.find((d) => d._id === hoverCircleId);
 
-  const elements = circles.map((data) => {
+  const elements = circles.flatMap((circle) => {
+    const xMin = Math.min(...circle.pos.map((p) => p.x)); // circle.xpos
+    const xMax = Math.max(...circle.pos.map((p) => p.x + p.w));
+    const pWidth = xMax - xMin;
+    const yMin = Math.min(...circle.pos.map((p) => p.y)); // circle.ypos
+    const yMax = Math.max(...circle.pos.map((p) => p.y + p.h));
+    const pHeight = yMax - yMin;
+
     return (
       <div
-        key={data._id.toString() + data.loc}
-        onMouseEnter={() => setHoverLoc(data.loc)}
-        onMouseLeave={() => setHoverLoc(null)}
+        key={circle._id.toString() + circle.loc}
+        onMouseEnter={() => setHoverCircleId(circle._id)}
+        onMouseLeave={() => setHoverCircleId(null)}
       >
         <CircleDisplay
-          _id={data._id}
-          xPos={data.xPos}
-          yPos={data.yPos}
-          width={data.width}
-          height={data.height}
-          loc={data.loc}
-          name={data.name}
-          repr={data.repr}
-          urls={data.urls}
-          days={data.days}
-          tags={data.tags}
-          hovering={loc?.loc === data.loc}
-          selected={selectedLoc === data.loc}
+          _id={circle._id}
+          pos={{ x: xMin, y: yMin, w: pWidth, h: pHeight }}
+          hovering={loc?._id === circle._id}
+          selected={selectedCircleId === circle._id}
           personalData={personalData}
-          setSelectedLoc={setSelectedLoc}
-          fireForceLocationEvent={fireForceLocationEvent}
+          setSelectedCircleId={setSelectedCircleId}
+          fireForceCircleSetEvent={fireForceCircleSetEvent}
           fireForceSilderPercentageSetEvent={fireForceSilderPercentageSetEvent}
         />
       </div>
@@ -70,11 +68,7 @@ export default function MapContainer({
   });
 
   const tooltipElem = loc != null && (
-    <Tooltip
-      location={loc}
-      scaledPosition={scaledPosition}
-      zoomRatio={zoomRatio}
-    />
+    <Tooltip circle={loc} scaledPosition={scaledPosition} zoomRatio={ratio} />
   );
 
   return (
@@ -82,8 +76,7 @@ export default function MapContainer({
       <div
         style={{
           transform:
-            `translate(${position.x}px, ${position.y}px)` +
-            `scale(${zoomRatio})`,
+            `translate(${position.x}px, ${position.y}px)` + `scale(${ratio})`,
           transformOrigin: `${transformOrigin.x - position.x}px ${
             transformOrigin.y - position.y
           }px`,

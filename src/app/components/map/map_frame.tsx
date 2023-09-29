@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import MapContainer from "./map_container";
 import { CircleOptions } from "./circle_display";
 import useWindowDimensions from "@/app/utils/get_window_dimensions";
@@ -18,11 +18,11 @@ interface MapFrameOptions {
   day: number;
   circles: CircleOptions[];
   personalData: PersonalData;
-  selectedLoc: string | null;
-  setSelectedLoc: Dispatch<SetStateAction<string | null>>;
+  selectedCircleId: string | null;
+  setSelectedCircleId: Dispatch<SetStateAction<string | null>>;
   forceLocationEvent: ForceLocationEvent;
   setSilderPercentage: Dispatch<SetStateAction<number>>;
-  fireForceLocationEvent: Dispatch<SetStateAction<ForceLocationEvent>>;
+  fireForceCircleSetEvent: Dispatch<SetStateAction<ForceLocationEvent>>;
   fireForceSilderPercentageSetEvent: Dispatch<
     SetStateAction<ForceSilderPercentageSetEvent>
   >;
@@ -39,11 +39,11 @@ export default function MapFrame({
   day,
   circles,
   personalData,
-  selectedLoc,
-  setSelectedLoc,
+  selectedCircleId,
+  setSelectedCircleId,
   forceLocationEvent,
   setSilderPercentage,
-  fireForceLocationEvent,
+  fireForceCircleSetEvent,
   fireForceSilderPercentageSetEvent,
 }: MapFrameOptions) {
   const { width, height } = useWindowDimensions();
@@ -77,15 +77,24 @@ export default function MapFrame({
   if (!forceLocationEvent.used) {
     forceLocationEvent.used = true;
 
-    const floc = circles.find((circle) => circle.loc === selectedLoc);
+    const floc = circles.find(
+      (circle) => selectedCircleId && circle._id === selectedCircleId
+    );
 
     if (floc !== undefined) {
+      const xMin = Math.min(...floc.pos.map((p) => p.x));
+      const xMax = Math.max(...floc.pos.map((p) => p.x + p.w));
+      const pWidth = xMax - xMin;
+      const yMin = Math.min(...floc.pos.map((p) => p.y));
+      const yMax = Math.max(...floc.pos.map((p) => p.y + p.h));
+      const pHeight = yMax - yMin;
+
       const newX = isSidebar
-        ? -(floc.xPos + floc.width / 2 - 400 - (width - 400) / 2)
-        : -(floc.xPos + floc.width / 2 - width / 2);
+        ? -(xMin + pWidth / 2 - 400 - (width - 400) / 2)
+        : -(xMin + pWidth / 2 - width / 2);
       const newY = isSidebar
-        ? -(floc.yPos + floc.height / 2 - height / 2)
-        : -(floc.yPos + floc.height / 2 - height / 4);
+        ? -(yMin + pHeight / 2 - height / 2)
+        : -(yMin + pHeight / 2 - height / 4);
       const newR = 1;
 
       const oldX = position.x;
@@ -180,7 +189,7 @@ export default function MapFrame({
     if (noDrag) {
       setPosition(oldPosition);
       setScaledPosition(oldScaledPosition);
-      setSelectedLoc(null);
+      setSelectedCircleId(null);
       setSilderPercentage(1);
     }
   };
@@ -310,7 +319,7 @@ export default function MapFrame({
   const touchEndHandler = (e: React.TouchEvent) => {
     touchMoveHandler(e);
     if (noDrag) {
-      setSelectedLoc(null);
+      setSelectedCircleId(null);
       setSilderPercentage(1);
     }
     for (let i = 0; i < e.changedTouches.length; i++) {
@@ -358,9 +367,9 @@ export default function MapFrame({
         circles={circles}
         personalData={personalData}
         transformOrigin={transformOrigin}
-        selectedLoc={selectedLoc}
-        setSelectedLoc={setSelectedLoc}
-        fireForceLocationEvent={fireForceLocationEvent}
+        selectedCircleId={selectedCircleId}
+        setSelectedCircleId={setSelectedCircleId}
+        fireForceCircleSetEvent={fireForceCircleSetEvent}
         fireForceSilderPercentageSetEvent={fireForceSilderPercentageSetEvent}
       />
     </div>
