@@ -85,7 +85,10 @@ export default function App() {
         );
       else if (q.startsWith("@") && q.length > 1)
         res = res.filter((c) =>
-          c.repr?.flatMap((x) => x.name).includes(q.slice(1))
+          c.repr
+            ?.flatMap((x) => x.name)
+            .join(";")
+            .includes(q.slice(1))
         );
       else if (q === "*토")
         res = res.filter((c) => c.days.includes(0) && !c.days.includes(1));
