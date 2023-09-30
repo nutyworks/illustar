@@ -222,26 +222,6 @@ export default function InfoSilderContainer({
             )}
           </td>
         </tr>
-        <tr>
-          <td>캐릭터</td>
-          <td>
-            {circle.character_tags ?? (
-              <span style={{ color: "rgb(var(--foreground-description-rgb))" }}>
-                정보 없음
-              </span>
-            )}
-          </td>
-        </tr>
-        <tr>
-          <td>굿즈</td>
-          <td>
-            {circle.type_tags ?? (
-              <span style={{ color: "rgb(var(--foreground-description-rgb))" }}>
-                정보 없음
-              </span>
-            )}
-          </td>
-        </tr>
       </table>
       <p></p>
       <div
@@ -350,3 +330,27 @@ function DayMarker({ days }: { days: number[] }) {
     return <span style={{ color: "rgb(var(--sunday-color))" }}>일요일</span>;
   }
 }
+
+/*
+
+        <tr>
+          <td>캐릭터</td>
+          <td>
+            {circle.character_tags ?? (
+              <span style={{ color: "rgb(var(--foreground-description-rgb))" }}>
+                정보 없음
+              </span>
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>굿즈</td>
+          <td>
+            {circle.type_tags ?? (
+              <span style={{ color: "rgb(var(--foreground-description-rgb))" }}>
+                정보 없음
+              </span>
+            )}
+          </td>
+        </tr>
+*/
