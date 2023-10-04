@@ -97,7 +97,6 @@ export default function InfoSilderContainer({
         width: "100%",
         paddingLeft: "1em",
         paddingRight: "1em",
-        overflow: "hidden",
       }}
     >
       {circle.loc.join(", ")} · <DayMarker days={circle.days} />
