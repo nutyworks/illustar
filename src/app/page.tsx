@@ -27,7 +27,7 @@ const MapFrame = dynamic(() => import("./components/map/map_frame"), {
 });
 
 export default function App() {
-  const [day, setDay] = useState(0);
+  const [day, setDay] = useState(1);
   const [selectedCircleId, setSelectedCircleId] = useState<string | null>(null);
   const [searchText, setSearchText] = useState<string>("");
   const [isSearching, setSearching] = useState<boolean>(false);
